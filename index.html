@@ -773,15 +773,13 @@ body::after{
   .search{width:100%;order:5;margin-top:4px}
   .topbar .btn-add{display:none}           /* 移动端用底部栏的加号 */
   .topbar .btn-backup span.lbl{display:none}
-  .topbar .btn-backup{padding:8px 10px}
-  .view{padding:24px 14px 96px}            /* 底部留出空间 */
+  .topbar .btn-backup{padding:7px 9px}
+  .topbar .btn-backup svg{width:15px;height:15px}
+  .view{padding:20px 14px calc(96px + env(safe-area-inset-bottom))}  /* 底部留足空间 */
   .bottom-bar{display:flex}
-  .hero h1{font-size:46px}
-  .hero h1 .small{font-size:18px}
   .year-big{font-size:96px}
   .year-total{font-size:64px}
   .grid{grid-template-columns:repeat(2,1fr);gap:20px 14px}
-  .stats-grid{grid-template-columns:repeat(2,1fr)}
   .picks-list{grid-template-columns:1fr}
   .form-row.two,.form-row.three{grid-template-columns:1fr}
   .type-picker{grid-template-columns:repeat(3,1fr)}
@@ -795,7 +793,112 @@ body::after{
   .awards-grid{grid-template-columns:1fr}
   .detail-highlight{padding:18px 16px 14px}
   .detail-highlight .hl-text{font-size:16px}
+
+  /* ===== 移动端首页重构：信息摘要型 ===== */
+  /* 隐藏桌面端 hero 大标题与 year-badge，改用紧凑头部 */
+  #view-home .hero{display:none}
+  #view-home .year-badge{display:none}
+  .m-home-head{
+    display:flex;align-items:baseline;justify-content:space-between;
+    padding:4px 0 14px;border-bottom:1px solid var(--rule);margin-bottom:18px;
+  }
+  .m-home-head .t{
+    font-family:var(--serif-cn);font-weight:900;font-size:24px;color:var(--ink);letter-spacing:.02em;
+  }
+  .m-home-head .t .accent{color:var(--oxblood);font-family:var(--serif);font-style:italic;font-weight:500;font-size:14px;margin-left:6px}
+  .m-home-head .yr{
+    font-family:var(--serif);font-style:italic;font-size:13px;color:var(--ink-mute);letter-spacing:.1em;
+  }
+  .m-section{margin-bottom:26px}
+  .m-section-head{
+    display:flex;align-items:baseline;justify-content:space-between;margin-bottom:12px;
+  }
+  .m-section-head .kicker{font-size:11px}
+  .m-section-head .more{
+    font-family:var(--serif);font-style:italic;font-size:11.5px;color:var(--oxblood);
+    background:none;border:none;cursor:pointer;letter-spacing:.04em;
+  }
+
+  /* 今日拾光 横向卡片 */
+  .m-pick{
+    display:grid;grid-template-columns:72px 1fr;gap:14px;align-items:stretch;
+    background:var(--paper-card);border:1px solid var(--rule-soft);border-radius:3px;
+    padding:12px;cursor:pointer;transition:transform .25s, box-shadow .25s;
+  }
+  .m-pick:active{transform:scale(.99)}
+  .m-pick .m-cover{
+    width:72px;height:96px;border-radius:2px;overflow:hidden;flex-shrink:0;
+    box-shadow:0 3px 8px var(--shadow-soft);
+  }
+  .m-pick .m-body{display:flex;flex-direction:column;justify-content:space-between;min-width:0}
+  .m-pick .m-top{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .m-pick .m-tag{
+    font-family:var(--serif-cn);font-weight:700;font-size:11px;color:var(--oxblood);
+    border:1px solid var(--oxblood);padding:1px 6px;border-radius:1px;
+  }
+  .m-pick .m-stars{display:inline-flex;gap:0}
+  .m-pick .m-stars svg{width:11px;height:11px}
+  .m-pick .m-rating{font-family:var(--serif);font-size:11px;color:var(--ink-mute);font-style:italic;margin-left:2px}
+  .m-pick .m-title{
+    font-family:var(--serif-cn);font-weight:700;font-size:16px;color:var(--ink);
+    line-height:1.25;margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+  .m-pick .m-meta{
+    font-family:var(--serif);font-style:italic;font-size:11.5px;color:var(--ink-mute);margin-top:3px;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+  .m-pick .m-quote{
+    font-family:var(--serif-cn);font-size:12.5px;color:var(--ink-soft);line-height:1.55;margin-top:6px;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  }
+
+  /* 今年拾光 2行3列小卡 */
+  .m-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+  .m-stat{
+    height:72px;background:var(--paper-card);border:1px solid var(--rule-soft);
+    border-radius:2px;padding:8px 10px;display:flex;flex-direction:column;justify-content:space-between;
+    cursor:pointer;transition:transform .2s, box-shadow .2s;position:relative;overflow:hidden;
+  }
+  .m-stat:active{transform:scale(.97)}
+  .m-stat .row1{display:flex;align-items:baseline;justify-content:space-between}
+  .m-stat .ch{font-family:var(--serif-cn);font-weight:900;font-size:20px;color:var(--oxblood);line-height:1}
+  .m-stat .en{font-family:var(--serif);font-style:italic;font-size:9px;color:var(--ink-mute);letter-spacing:.08em}
+  .m-stat .num{font-family:var(--serif);font-weight:700;font-size:18px;color:var(--ink);line-height:1}
+  .m-stat .num .u{font-size:10px;color:var(--ink-mute);font-weight:400;margin-left:2px}
+
+  /* 最近记录 列表 */
+  .m-recent{display:flex;flex-direction:column}
+  .m-recent-item{
+    display:grid;grid-template-columns:48px 1fr auto;gap:12px;align-items:center;
+    padding:10px 0;border-bottom:1px solid var(--rule-soft);cursor:pointer;
+    min-height:72px;transition:background .2s;
+  }
+  .m-recent-item:active{background:rgba(168,127,46,.06)}
+  .m-recent-item .mc{
+    width:48px;height:64px;border-radius:2px;overflow:hidden;flex-shrink:0;
+    box-shadow:0 2px 5px var(--shadow-soft);
+  }
+  .m-recent-item .mi{min-width:0}
+  .m-recent-item .mi .t{
+    font-family:var(--serif-cn);font-weight:600;font-size:14.5px;color:var(--ink);
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+  .m-recent-item .mi .m{
+    font-family:var(--serif);font-style:italic;font-size:11px;color:var(--ink-mute);margin-top:2px;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+  .m-recent-item .mr{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+  .m-recent-item .mr .tag{
+    font-family:var(--serif-cn);font-weight:700;font-size:10.5px;color:var(--oxblood);
+    border:1px solid var(--oxblood);padding:1px 5px;border-radius:1px;
+  }
+  .m-recent-item .mr .d{font-family:var(--serif);font-style:italic;font-size:10.5px;color:var(--ink-mute)}
+  .m-recent-item .mr .rs{display:inline-flex;gap:0}
+  .m-recent-item .mr .rs svg{width:9px;height:9px}
 }
+/* 移动端专用块：桌面默认隐藏，移动端显示 */
+.m-only{display:none}
+@media (max-width:720px){ .m-only{display:block} }
 </style>
 </head>
 <body>
@@ -859,6 +962,37 @@ body::after{
         <div class="kicker">Today's Pick · 今日重温</div>
         <h2 class="section-title" style="margin:8px 0 18px">随手一拾</h2>
         <div id="pickCard"></div>
+      </div>
+    </div>
+
+    <!-- 移动端首页专用结构（桌面端隐藏） -->
+    <div class="m-only">
+      <div class="m-home-head">
+        <span class="t">拾光<span class="accent">Shíguāng</span></span>
+        <span class="yr" id="mHomeYear">2025</span>
+      </div>
+
+      <div class="m-section">
+        <div class="m-section-head">
+          <span class="kicker">Today's Pick · 今日拾光</span>
+        </div>
+        <div id="mPick"></div>
+      </div>
+
+      <div class="m-section">
+        <div class="m-section-head">
+          <span class="kicker">This Year · 今年拾光</span>
+          <button class="more" onclick="go('library')">全部 →</button>
+        </div>
+        <div class="m-stats" id="mStats"></div>
+      </div>
+
+      <div class="m-section">
+        <div class="m-section-head">
+          <span class="kicker">Recently Logged · 最近记录</span>
+          <button class="more" onclick="go('library')">更多 →</button>
+        </div>
+        <div class="m-recent" id="mRecent"></div>
       </div>
     </div>
   </section>
@@ -1474,6 +1608,69 @@ function renderHome(){
         <button class="go" onclick="openDetail('${pick.id}')">翻开档案 →</button>
       </div>`;
   }
+
+  // ===== 移动端首页渲染 =====
+  renderMobileHome(yrEntries, yr, pick);
+}
+
+function renderMobileHome(yrEntries, yr, pick){
+  document.getElementById('mHomeYear').textContent = yr;
+
+  // 今日拾光 横向卡片
+  const mPick = document.getElementById('mPick');
+  if(pick){
+    const t = TYPE_MAP[pick.type];
+    mPick.innerHTML = `
+      <div class="m-pick" onclick="openDetail('${pick.id}')">
+        <div class="m-cover">${coverHTML(pick)}</div>
+        <div class="m-body">
+          <div>
+            <div class="m-top">
+              <span class="m-tag">${t.ch}</span>
+              <span class="m-stars">${starsHTML(pick.rating,11)}</span>
+              <span class="m-rating">${pick.rating.toFixed(1)}</span>
+            </div>
+            <div class="m-title">${pick.title}</div>
+            <div class="m-meta">${t.en} · ${pick.creator||''} · ${pick.year||''}</div>
+          </div>
+          <div class="m-quote">${pick.review||pick.highlight||'尚未留下只言片语。'}</div>
+        </div>
+      </div>`;
+  }else{
+    mPick.innerHTML = `<div class="m-pick"><div class="m-body"><div class="m-title">档案还空着</div><div class="m-quote">记下第一部作品，开始你的拾光之旅。</div></div></div>`;
+  }
+
+  // 今年拾光 2行3列
+  const counts = {};
+  TYPES.forEach(t=>counts[t.key]=0);
+  yrEntries.forEach(e=>counts[e.type]=(counts[e.type]||0)+1);
+  document.getElementById('mStats').innerHTML = TYPES.map(t=>`
+    <div class="m-stat" onclick="setFilter('${t.key}')">
+      <div class="row1">
+        <span class="ch">${t.ch}</span>
+        <span class="en">${t.en}</span>
+      </div>
+      <div class="num">${counts[t.key]}<span class="u">件</span></div>
+    </div>`).join('');
+
+  // 最近记录 5 条
+  const recent = [...state.entries].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,5);
+  document.getElementById('mRecent').innerHTML = recent.map(e=>{
+    const t = TYPE_MAP[e.type];
+    return `
+    <div class="m-recent-item" onclick="openDetail('${e.id}')">
+      <div class="mc">${coverHTML(e)}</div>
+      <div class="mi">
+        <div class="t">${e.title}</div>
+        <div class="m">${t.en} · ${e.creator||''} · ${e.year||''}</div>
+      </div>
+      <div class="mr">
+        <span class="tag">${t.ch}</span>
+        <span class="rs">${starsHTML(e.rating,9)}</span>
+        <span class="d">${fmtDate(e.date)}</span>
+      </div>
+    </div>`;
+  }).join('') || `<div style="font-family:var(--serif-cn);color:var(--ink-mute);font-size:13px;padding:12px 0">还没有记录，点底部「记一笔」开始。</div>`;
 }
 
 /* ============================================================
