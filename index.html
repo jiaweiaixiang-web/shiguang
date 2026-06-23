@@ -1,0 +1,1936 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>拾光 Shíguāng · 光影书游，皆为拾光</title>
+<!-- PWA -->
+<link rel="manifest" href="manifest.webmanifest" />
+<meta name="theme-color" content="#efe6d2" />
+<meta name="description" content="拾光 — 个人光影书游记录档案" />
+<link rel="apple-touch-icon" href="icons/icon-192.png" />
+<link rel="icon" type="image/svg+xml" href="icons/icon.svg" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="拾光" />
+<meta name="mobile-web-app-capable" content="yes" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,500&family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Serif+SC:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   拾光 Shíguāng — 暖纸墨色 · 编辑杂志风
+   ============================================================ */
+:root{
+  --paper:      #efe6d2;
+  --paper-2:    #e7dabf;
+  --paper-3:    #f6efdc;
+  --paper-card: #f3ead4;
+  --ink:        #1c1714;
+  --ink-soft:   #463a2e;
+  --ink-mute:   #83715c;
+  --oxblood:    #7a2e2a;
+  --oxblood-dp: #5c201d;
+  --gold:       #a87f2e;
+  --gold-soft:  #c6a25e;
+  --rule:       #cdb98f;
+  --rule-soft:  #ddcba4;
+  --shadow:     rgba(28,23,20,.14);
+  --shadow-soft:rgba(28,23,20,.07);
+  --serif: "Fraunces","Noto Serif SC",Georgia,serif;
+  --serif-cn:"Noto Serif SC","Fraunces",serif;
+  --sans:  "Noto Sans SC","Fraunces",system-ui,sans-serif;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  font-family:var(--sans);
+  color:var(--ink);
+  background:var(--paper);
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+/* 纸纹颗粒 + 暖光晕 */
+body::before{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(120% 80% at 15% 0%, rgba(168,127,46,.10), transparent 55%),
+    radial-gradient(120% 90% at 100% 100%, rgba(122,46,42,.08), transparent 50%);
+}
+body::after{
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.11 0 0 0 0 0.09 0 0 0 0 0.08 0 0 0 0.08 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  mix-blend-mode:multiply;
+}
+#app{position:relative;z-index:1}
+
+/* ---------- 顶栏 ---------- */
+.topbar{
+  position:sticky;top:0;z-index:50;
+  display:flex;align-items:center;gap:24px;
+  padding:16px 40px;
+  background:rgba(239,230,210,.86);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--rule);
+}
+.brand{display:flex;align-items:baseline;gap:10px;cursor:pointer}
+.brand .mark{
+  font-family:var(--serif-cn);font-weight:900;font-size:26px;
+  color:var(--oxblood);letter-spacing:.04em;
+}
+.brand .en{
+  font-family:var(--serif);font-style:italic;font-weight:400;font-size:14px;
+  color:var(--ink-mute);letter-spacing:.18em;text-transform:uppercase;
+}
+.nav{display:flex;gap:4px;margin-left:8px}
+.nav button{
+  font-family:var(--sans);font-size:13.5px;font-weight:500;
+  color:var(--ink-soft);background:none;border:none;cursor:pointer;
+  padding:8px 14px;border-radius:2px;letter-spacing:.04em;
+  transition:all .25s ease;position:relative;
+}
+.nav button .en{font-family:var(--serif);font-style:italic;font-size:11px;color:var(--ink-mute);margin-left:5px;font-weight:400}
+.nav button:hover{color:var(--oxblood)}
+.nav button.active{color:var(--ink)}
+.nav button.active::after{
+  content:"";position:absolute;left:14px;right:14px;bottom:2px;height:1.5px;background:var(--oxblood);
+}
+.topbar .spacer{flex:1}
+.search{
+  display:flex;align-items:center;gap:8px;
+  background:var(--paper-3);border:1px solid var(--rule-soft);
+  padding:7px 12px;border-radius:2px;width:220px;
+}
+.search input{
+  border:none;background:none;outline:none;font-family:var(--sans);
+  font-size:13px;color:var(--ink);width:100%;
+}
+.search input::placeholder{color:var(--ink-mute);font-style:italic}
+.btn-add{
+  font-family:var(--sans);font-size:13px;font-weight:500;
+  background:var(--ink);color:var(--paper);border:none;cursor:pointer;
+  padding:9px 18px;border-radius:2px;letter-spacing:.06em;
+  transition:background .25s;
+}
+.btn-add:hover{background:var(--oxblood)}
+
+/* ---------- 视图通用 ---------- */
+.view{display:none;padding:48px 40px 80px;max-width:1320px;margin:0 auto}
+.view.active{display:block;animation:fadeUp .5s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+.kicker{
+  font-family:var(--serif);font-style:italic;font-weight:400;
+  font-size:13px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--oxblood);
+}
+.section-title{
+  font-family:var(--serif-cn);font-weight:700;font-size:30px;
+  color:var(--ink);letter-spacing:.02em;line-height:1.2;
+}
+.section-title .en{font-family:var(--serif);font-style:italic;font-weight:400;font-size:18px;color:var(--ink-mute);margin-left:10px}
+.rule{height:1px;background:var(--rule);margin:18px 0}
+
+/* ============================================================
+   首页 HOME
+   ============================================================ */
+.hero{
+  display:grid;grid-template-columns:1.4fr 1fr;gap:48px;align-items:end;
+  padding-bottom:40px;border-bottom:1px solid var(--rule);margin-bottom:48px;
+}
+.hero h1{
+  font-family:var(--serif-cn);font-weight:900;font-size:84px;line-height:.96;
+  color:var(--ink);letter-spacing:-.01em;
+}
+.hero h1 .accent{color:var(--oxblood);font-style:italic;font-family:var(--serif)}
+.hero h1 .small{display:block;font-size:22px;font-weight:400;color:var(--ink-mute);font-family:var(--serif);font-style:italic;margin-top:14px;letter-spacing:.04em}
+.hero .lede{
+  font-family:var(--serif-cn);font-size:16px;color:var(--ink-soft);
+  line-height:1.85;max-width:380px;
+}
+.hero .lede::first-letter{
+  font-family:var(--serif);font-size:54px;font-weight:600;float:left;
+  line-height:.9;margin:6px 8px 0 0;color:var(--oxblood);
+}
+
+.year-badge{
+  display:flex;align-items:baseline;gap:14px;margin-bottom:18px;
+}
+.year-badge .yr{
+  font-family:var(--serif);font-weight:900;font-size:72px;line-height:1;
+  color:var(--ink);letter-spacing:-.02em;
+}
+.year-badge .lbl{
+  font-family:var(--serif);font-style:italic;font-size:14px;color:var(--ink-mute);
+  letter-spacing:.18em;text-transform:uppercase;
+}
+
+/* 统计卡 */
+.stats-grid{
+  display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-bottom:56px;
+}
+.stat-card{
+  background:var(--paper-card);border:1px solid var(--rule-soft);
+  padding:22px 18px;border-radius:2px;position:relative;overflow:hidden;
+  transition:transform .3s ease, box-shadow .3s ease;
+}
+.stat-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px var(--shadow-soft)}
+.stat-card .ch{
+  font-family:var(--serif-cn);font-weight:900;font-size:30px;color:var(--oxblood);
+  line-height:1;
+}
+.stat-card .en{
+  font-family:var(--serif);font-style:italic;font-size:11px;color:var(--ink-mute);
+  letter-spacing:.16em;text-transform:uppercase;display:block;margin-top:4px;
+}
+.stat-card .num{
+  font-family:var(--serif);font-weight:700;font-size:42px;color:var(--ink);
+  line-height:1;margin-top:14px;
+}
+.stat-card .unit{font-size:14px;color:var(--ink-mute);font-weight:400;margin-left:4px}
+
+/* 双栏：最近 + 今日拾光 */
+.home-cols{display:grid;grid-template-columns:1.5fr 1fr;gap:48px}
+.recent-list{display:flex;flex-direction:column;gap:0}
+.recent-item{
+  display:grid;grid-template-columns:54px 1fr auto auto;gap:18px;align-items:center;
+  padding:18px 4px;border-bottom:1px solid var(--rule-soft);cursor:pointer;
+  transition:padding-left .3s ease, background .3s ease;
+}
+.recent-item:hover{padding-left:14px;background:rgba(168,127,46,.06)}
+.recent-item .mini-cover{
+  width:54px;height:74px;border-radius:2px;overflow:hidden;
+  box-shadow:0 3px 8px var(--shadow-soft);
+}
+.recent-item .info .t{
+  font-family:var(--serif-cn);font-weight:600;font-size:17px;color:var(--ink);
+}
+.recent-item .info .m{
+  font-family:var(--serif);font-style:italic;font-size:12.5px;color:var(--ink-mute);
+  margin-top:2px;
+}
+.recent-item .tag{
+  font-family:var(--serif-cn);font-weight:700;font-size:13px;color:var(--oxblood);
+  border:1px solid var(--oxblood);padding:2px 9px;border-radius:2px;
+}
+.recent-item .date{font-family:var(--serif);font-size:12.5px;color:var(--ink-mute);font-style:italic}
+
+.pick-card{
+  background:var(--ink);color:var(--paper);padding:32px 28px;border-radius:2px;
+  position:relative;overflow:hidden;
+}
+.pick-card::before{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(80% 60% at 80% 0%, rgba(168,127,46,.22), transparent 60%);
+}
+.pick-card .kicker{color:var(--gold-soft);position:relative}
+.pick-card h3{
+  font-family:var(--serif-cn);font-weight:700;font-size:24px;margin-top:14px;
+  position:relative;line-height:1.3;
+}
+.pick-card .meta{font-family:var(--serif);font-style:italic;font-size:13px;color:var(--gold-soft);margin-top:8px;position:relative}
+.pick-card .quote{
+  font-family:var(--serif-cn);font-size:14.5px;line-height:1.9;color:var(--paper-2);
+  margin-top:18px;position:relative;border-left:2px solid var(--gold);padding-left:14px;
+}
+.pick-card .go{
+  margin-top:22px;font-family:var(--sans);font-size:12px;color:var(--gold-soft);
+  letter-spacing:.16em;text-transform:uppercase;cursor:pointer;position:relative;
+  background:none;border:none;border-bottom:1px solid var(--gold);padding-bottom:3px;
+}
+.pick-card .go:hover{color:var(--paper)}
+
+/* ============================================================
+   光影阁 LIBRARY
+   ============================================================ */
+.lib-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:8px}
+.lib-head .left h2{font-family:var(--serif-cn);font-weight:900;font-size:48px;color:var(--ink);line-height:1}
+.lib-head .left h2 .en{font-family:var(--serif);font-style:italic;font-weight:400;font-size:20px;color:var(--ink-mute);margin-left:12px}
+.lib-head .count{font-family:var(--serif);font-style:italic;font-size:14px;color:var(--ink-mute)}
+
+.filter-bar{
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:24px 0 32px;
+  padding-bottom:18px;border-bottom:1px solid var(--rule);
+}
+.filter-bar .chip{
+  font-family:var(--serif-cn);font-weight:600;font-size:14px;color:var(--ink-soft);
+  background:none;border:1px solid var(--rule);cursor:pointer;
+  padding:7px 16px;border-radius:2px;transition:all .25s;display:flex;align-items:center;gap:7px;
+}
+.filter-bar .chip .en{font-family:var(--serif);font-style:italic;font-size:11px;color:var(--ink-mute);font-weight:400}
+.filter-bar .chip:hover{border-color:var(--ink);color:var(--ink)}
+.filter-bar .chip.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.filter-bar .chip.active .en{color:var(--gold-soft)}
+.filter-bar .sort-sel{
+  margin-left:auto;font-family:var(--sans);font-size:13px;color:var(--ink-soft);
+  background:var(--paper-3);border:1px solid var(--rule-soft);padding:7px 12px;border-radius:2px;cursor:pointer;outline:none;
+}
+
+.grid{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:30px 26px;
+}
+.card{cursor:pointer;animation:fadeUp .5s ease both}
+.card .cover-wrap{position:relative;perspective:800px}
+.card .cover{
+  width:100%;aspect-ratio:3/4;border-radius:3px;overflow:hidden;
+  box-shadow:0 6px 18px var(--shadow);position:relative;
+  transition:transform .4s cubic-bezier(.2,.7,.2,1), box-shadow .4s;
+  transform-style:preserve-3d;
+}
+.card:hover .cover{transform:translateY(-6px) rotateX(4deg);box-shadow:0 16px 32px var(--shadow)}
+.cover-inner{
+  position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;
+  padding:18px 16px;color:#f6efdc;
+}
+.cover-inner::before{
+  content:"";position:absolute;inset:8px;border:1px solid rgba(246,239,220,.28);border-radius:2px;pointer-events:none;
+}
+.cover-inner .cv-tag{
+  font-family:var(--serif-cn);font-weight:700;font-size:13px;letter-spacing:.1em;
+  align-self:flex-start;border:1px solid rgba(246,239,220,.5);padding:1px 7px;border-radius:1px;
+}
+.cover-inner .cv-title{
+  font-family:var(--serif-cn);font-weight:900;font-size:21px;line-height:1.18;
+  letter-spacing:.01em;text-shadow:0 1px 4px rgba(0,0,0,.3);
+}
+.cover-inner .cv-en{
+  font-family:var(--serif);font-style:italic;font-size:11px;opacity:.82;margin-top:5px;letter-spacing:.04em;
+}
+.card .meta{margin-top:14px}
+.card .meta .t{
+  font-family:var(--serif-cn);font-weight:600;font-size:15.5px;color:var(--ink);line-height:1.3;
+}
+.card .meta .m{
+  font-family:var(--serif);font-style:italic;font-size:12px;color:var(--ink-mute);margin-top:3px;
+}
+.card .meta .stars{margin-top:7px;display:flex;align-items:center;gap:6px}
+.stars{display:inline-flex;gap:1px}
+.stars svg{width:13px;height:13px}
+.star-fill{fill:var(--gold)}
+.star-empty{fill:none;stroke:var(--gold);stroke-width:1.5}
+.card .meta .rating-num{font-family:var(--serif);font-size:12px;color:var(--ink-mute);font-style:italic}
+
+.empty{
+  grid-column:1/-1;text-align:center;padding:80px 20px;
+  font-family:var(--serif-cn);color:var(--ink-mute);
+}
+.empty .big{font-size:22px;color:var(--ink-soft);margin-bottom:8px}
+.empty .en{font-family:var(--serif);font-style:italic;font-size:14px}
+
+/* ============================================================
+   详情 DETAIL (侧抽屉)
+   ============================================================ */
+.overlay{
+  position:fixed;inset:0;z-index:100;background:rgba(28,23,20,.5);
+  backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .35s;
+}
+.overlay.show{opacity:1;pointer-events:auto}
+.drawer{
+  position:fixed;top:0;right:0;bottom:0;z-index:110;width:min(560px,92vw);
+  background:var(--paper);overflow-y:auto;
+  transform:translateX(100%);transition:transform .4s cubic-bezier(.2,.7,.2,1);
+  box-shadow:-20px 0 60px rgba(0,0,0,.25);
+}
+.drawer.show{transform:none}
+.drawer-head{
+  position:sticky;top:0;background:var(--paper);z-index:2;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:18px 28px;border-bottom:1px solid var(--rule);
+}
+.drawer-head .k{font-family:var(--serif);font-style:italic;font-size:12px;color:var(--oxblood);letter-spacing:.2em;text-transform:uppercase}
+.drawer-close{
+  background:none;border:none;cursor:pointer;font-size:22px;color:var(--ink-soft);
+  width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  transition:background .2s;
+}
+.drawer-close:hover{background:var(--paper-2)}
+.drawer-body{padding:28px}
+.detail-cover{
+  width:160px;aspect-ratio:3/4;border-radius:3px;overflow:hidden;
+  box-shadow:0 10px 28px var(--shadow);margin-bottom:20px;
+}
+.detail-title{
+  font-family:var(--serif-cn);font-weight:900;font-size:32px;color:var(--ink);line-height:1.15;
+}
+.detail-ot{font-family:var(--serif);font-style:italic;font-size:15px;color:var(--ink-mute);margin-top:6px}
+.detail-tag-row{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.detail-tag-row .tag{
+  font-family:var(--serif-cn);font-weight:700;font-size:12px;color:var(--oxblood);
+  border:1px solid var(--oxblood);padding:3px 10px;border-radius:2px;
+}
+.detail-tag-row .genre{
+  font-family:var(--sans);font-size:12px;color:var(--ink-soft);
+  background:var(--paper-2);padding:3px 10px;border-radius:2px;border:1px solid var(--rule-soft);
+}
+.detail-rating{display:flex;align-items:center;gap:12px;margin-top:22px;padding:16px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.detail-rating .stars svg{width:18px;height:18px}
+.detail-rating .num{font-family:var(--serif);font-weight:700;font-size:22px;color:var(--ink)}
+.detail-rating .lbl{font-family:var(--serif);font-style:italic;font-size:12px;color:var(--ink-mute);letter-spacing:.1em}
+.detail-section{margin-top:26px}
+.detail-section .lbl{
+  font-family:var(--serif);font-style:italic;font-size:12px;color:var(--oxblood);
+  letter-spacing:.2em;text-transform:uppercase;margin-bottom:8px;
+}
+.info-rows{display:grid;grid-template-columns:auto 1fr;gap:8px 18px;font-size:14px}
+.info-rows dt{font-family:var(--serif);font-style:italic;color:var(--ink-mute);font-size:13px}
+.info-rows dd{font-family:var(--serif-cn);color:var(--ink)}
+.detail-review{
+  font-family:var(--serif-cn);font-size:15px;line-height:1.95;color:var(--ink-soft);
+  padding:18px 20px;background:var(--paper-3);border-left:3px solid var(--gold);
+  border-radius:0 2px 2px 0;position:relative;
+}
+.detail-review::before{
+  content:"\201C";font-family:var(--serif);font-size:48px;color:var(--gold-soft);
+  position:absolute;top:-6px;left:8px;line-height:1;opacity:.5;
+}
+.detail-review .text{position:relative;padding-left:8px}
+.detail-date{font-family:var(--serif);font-style:italic;font-size:13px;color:var(--ink-mute);margin-top:18px;text-align:right}
+.detail-actions{display:flex;gap:10px;margin-top:28px;padding-top:20px;border-top:1px solid var(--rule)}
+.btn{
+  font-family:var(--sans);font-size:13px;font-weight:500;cursor:pointer;
+  padding:10px 18px;border-radius:2px;letter-spacing:.05em;transition:all .25s;border:1px solid;
+}
+.btn-primary{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.btn-primary:hover{background:var(--oxblood);border-color:var(--oxblood)}
+.btn-ghost{background:none;color:var(--ink-soft);border-color:var(--rule)}
+.btn-ghost:hover{border-color:var(--ink);color:var(--ink)}
+.btn-danger{background:none;color:var(--oxblood);border-color:var(--oxblood)}
+.btn-danger:hover{background:var(--oxblood);color:var(--paper)}
+
+/* ============================================================
+   添加 / 编辑表单
+   ============================================================ */
+.form-view{max-width:760px}
+.form-view h2{font-family:var(--serif-cn);font-weight:900;font-size:44px;color:var(--ink);line-height:1}
+.form-view h2 .en{font-family:var(--serif);font-style:italic;font-weight:400;font-size:18px;color:var(--ink-mute);margin-left:12px}
+.form-view .lede{font-family:var(--serif-cn);color:var(--ink-soft);margin-top:10px;font-size:15px}
+.form{margin-top:36px;display:grid;gap:26px}
+.form-row{display:grid;gap:26px}
+.form-row.two{grid-template-columns:1fr 1fr}
+.form-row.three{grid-template-columns:1fr 1fr 1fr}
+.field label{
+  display:block;font-family:var(--serif);font-style:italic;font-size:12px;
+  color:var(--oxblood);letter-spacing:.18em;text-transform:uppercase;margin-bottom:8px;
+}
+.field input,.field select,.field textarea{
+  width:100%;font-family:var(--serif-cn);font-size:15px;color:var(--ink);
+  background:var(--paper-3);border:1px solid var(--rule-soft);border-radius:2px;
+  padding:11px 14px;outline:none;transition:border .25s;
+}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--oxblood);background:var(--paper-card)}
+.field textarea{resize:vertical;min-height:90px;line-height:1.7}
+.type-picker{display:grid;grid-template-columns:repeat(6,1fr);gap:10px}
+.type-pick{
+  cursor:pointer;text-align:center;padding:16px 8px;border:1px solid var(--rule-soft);
+  border-radius:2px;background:var(--paper-3);transition:all .25s;
+}
+.type-pick .ch{font-family:var(--serif-cn);font-weight:900;font-size:26px;color:var(--ink-soft);line-height:1}
+.type-pick .en{font-family:var(--serif);font-style:italic;font-size:10px;color:var(--ink-mute);letter-spacing:.12em;margin-top:6px;display:block}
+.type-pick:hover{border-color:var(--ink)}
+.type-pick.active{background:var(--ink);border-color:var(--ink)}
+.type-pick.active .ch{color:var(--paper)}
+.type-pick.active .en{color:var(--gold-soft)}
+
+.rating-input{display:flex;align-items:center;gap:4px}
+.rating-input svg{width:30px;height:30px;cursor:pointer;transition:transform .15s}
+.rating-input svg:hover{transform:scale(1.15)}
+.rating-input .val{font-family:var(--serif);font-weight:700;font-size:20px;color:var(--ink);margin-left:12px}
+
+.hue-picker{display:flex;gap:8px;flex-wrap:wrap}
+
+/* 封面上传 */
+.cover-upload{display:flex;gap:18px;align-items:flex-start}
+.cover-preview{
+  width:96px;height:128px;border-radius:3px;overflow:hidden;flex-shrink:0;
+  position:relative;box-shadow:0 4px 12px var(--shadow-soft);background:var(--paper-2);
+}
+.cover-preview .ph{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:var(--serif);font-style:italic;font-size:12px;color:var(--ink-mute);
+  text-align:center;padding:10px;
+}
+.cover-upload .ops{flex:1;display:flex;flex-direction:column;gap:10px}
+.cover-upload .hint-txt{font-family:var(--serif-cn);font-size:13px;color:var(--ink-mute);line-height:1.7}
+.cover-upload .hint-txt .en{font-family:var(--serif);font-style:italic;font-size:11.5px;display:block;margin-top:2px}
+.cu-btns{display:flex;gap:8px;flex-wrap:wrap}
+.cu-btn{
+  font-family:var(--sans);font-size:12.5px;cursor:pointer;padding:8px 14px;border-radius:2px;
+  border:1px solid var(--rule);background:var(--paper-3);color:var(--ink-soft);
+  transition:all .25s;letter-spacing:.04em;
+}
+.cu-btn:hover{border-color:var(--ink);color:var(--ink)}
+.cu-btn.danger{color:var(--oxblood);border-color:var(--oxblood)}
+.cu-btn.danger:hover{background:var(--oxblood);color:var(--paper)}
+.cu-btn input{display:none}
+.drag-over{outline:2px dashed var(--oxblood);outline-offset:3px}
+.hue-swatch{width:30px;height:30px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform .2s}
+.hue-swatch:hover{transform:scale(1.12)}
+.hue-swatch.active{border-color:var(--ink);transform:scale(1.12)}
+
+.form-actions{display:flex;gap:12px;justify-content:flex-end;margin-top:10px;padding-top:24px;border-top:1px solid var(--rule)}
+
+/* ============================================================
+   年度志 YEARLY
+   ============================================================ */
+.year-head{text-align:center;padding:20px 0 40px;border-bottom:1px solid var(--rule);margin-bottom:48px;position:relative}
+.year-switch{
+  position:absolute;top:0;left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;gap:18px;
+}
+.year-switch button{
+  background:none;border:1px solid var(--rule);cursor:pointer;
+  width:34px;height:34px;border-radius:50%;font-size:16px;color:var(--ink-soft);
+  display:flex;align-items:center;justify-content:center;transition:all .25s;font-family:var(--serif);
+}
+.year-switch button:hover{border-color:var(--oxblood);color:var(--oxblood)}
+.year-switch button:disabled{opacity:.3;cursor:default}
+.year-big{
+  font-family:var(--serif);font-weight:900;font-size:180px;line-height:.9;
+  color:var(--ink);letter-spacing:-.04em;margin-top:60px;
+}
+.year-big .accent{color:var(--oxblood);font-style:italic}
+.year-sub{font-family:var(--serif-cn);font-size:18px;color:var(--ink-mute);margin-top:10px}
+.year-sub .en{font-family:var(--serif);font-style:italic}
+
+.year-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:48px;margin-bottom:56px}
+.year-total{
+  font-family:var(--serif);font-weight:900;font-size:120px;line-height:.9;color:var(--oxblood);
+}
+.year-total .unit{font-family:var(--serif-cn);font-size:24px;color:var(--ink-soft);font-weight:500;margin-left:10px}
+.year-total-lbl{font-family:var(--serif);font-style:italic;font-size:14px;color:var(--ink-mute);letter-spacing:.16em;text-transform:uppercase;margin-top:8px}
+
+.cat-breakdown{display:flex;flex-direction:column;gap:14px;margin-top:20px}
+.cat-bar{display:grid;grid-template-columns:36px 1fr 40px;align-items:center;gap:14px}
+.cat-bar .ch{font-family:var(--serif-cn);font-weight:900;font-size:22px;color:var(--oxblood)}
+.cat-bar .track{height:14px;background:var(--paper-2);border-radius:7px;overflow:hidden;position:relative}
+.cat-bar .fill{height:100%;background:linear-gradient(90deg,var(--oxblood),var(--gold));border-radius:7px;transition:width .8s cubic-bezier(.2,.7,.2,1)}
+.cat-bar .n{font-family:var(--serif);font-weight:700;font-size:18px;color:var(--ink);text-align:right}
+
+/* 月度活动 */
+.monthly{margin-bottom:56px}
+.monthly h3{font-family:var(--serif-cn);font-weight:700;font-size:24px;margin-bottom:6px}
+.monthly h3 .en{font-family:var(--serif);font-style:italic;font-size:14px;color:var(--ink-mute);font-weight:400;margin-left:8px}
+.monthly .hint{font-family:var(--serif);font-style:italic;font-size:13px;color:var(--ink-mute);margin-bottom:24px}
+.month-chart{display:grid;grid-template-columns:repeat(12,1fr);gap:10px;align-items:end;height:200px}
+.month-col{display:flex;flex-direction:column;align-items:center;gap:8px;height:100%;justify-content:flex-end}
+.month-col .bar{
+  width:100%;max-width:42px;background:linear-gradient(180deg,var(--oxblood),var(--gold));
+  border-radius:2px 2px 0 0;min-height:3px;transition:height .8s cubic-bezier(.2,.7,.2,1);
+  position:relative;
+}
+.month-col .bar:hover::after{
+  content:attr(data-val);position:absolute;top:-22px;left:50%;transform:translateX(-50%);
+  font-family:var(--serif);font-size:12px;color:var(--ink);background:var(--paper-card);
+  padding:1px 6px;border-radius:2px;box-shadow:0 2px 6px var(--shadow-soft);white-space:nowrap;
+}
+.month-col .mlbl{font-family:var(--serif);font-style:italic;font-size:11px;color:var(--ink-mute)}
+
+/* 年度之选 */
+.top-picks{margin-bottom:56px}
+.top-picks h3{font-family:var(--serif-cn);font-weight:700;font-size:28px;margin-bottom:6px}
+.top-picks h3 .en{font-family:var(--serif);font-style:italic;font-size:16px;color:var(--ink-mute);font-weight:400;margin-left:10px}
+.top-picks .hint{font-family:var(--serif);font-style:italic;font-size:13px;color:var(--ink-mute);margin-bottom:28px}
+.picks-list{display:grid;grid-template-columns:repeat(3,1fr);gap:32px}
+.pick-item{cursor:pointer}
+.pick-item .rank{
+  font-family:var(--serif);font-weight:900;font-style:italic;font-size:64px;line-height:1;
+  color:var(--gold);margin-bottom:8px;
+}
+.pick-item .cover{width:100%;aspect-ratio:3/4;border-radius:3px;overflow:hidden;box-shadow:0 8px 22px var(--shadow);transition:transform .35s}
+.pick-item:hover .cover{transform:translateY(-5px)}
+.pick-item .t{font-family:var(--serif-cn);font-weight:700;font-size:18px;margin-top:14px;color:var(--ink)}
+.pick-item .m{font-family:var(--serif);font-style:italic;font-size:12.5px;color:var(--ink-mute);margin-top:3px}
+.pick-item .why{font-family:var(--serif-cn);font-size:13.5px;color:var(--ink-soft);margin-top:10px;line-height:1.7;border-left:2px solid var(--gold);padding-left:12px}
+
+/* 年度寄语 */
+.year-note{
+  background:var(--ink);color:var(--paper);padding:48px 44px;border-radius:2px;position:relative;overflow:hidden;
+}
+.year-note::before{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(70% 60% at 20% 100%, rgba(168,127,46,.2), transparent 60%);
+}
+.year-note .kicker{color:var(--gold-soft);position:relative}
+.year-note .text{
+  font-family:var(--serif-cn);font-size:22px;line-height:1.9;margin-top:18px;position:relative;
+  font-weight:500;
+}
+.year-note .text::first-letter{font-family:var(--serif);font-size:64px;font-weight:700;float:left;line-height:.9;margin:6px 10px 0 0;color:var(--gold)}
+.year-note .sig{font-family:var(--serif);font-style:italic;font-size:14px;color:var(--gold-soft);margin-top:24px;text-align:right;position:relative}
+
+/* ============================================================
+   封面生成 (色相)
+   ============================================================ */
+.cover-bg{position:absolute;inset:0}
+.cover-bg::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(160deg, rgba(0,0,0,.05), rgba(0,0,0,.35));
+}
+.cover-bg::before{
+  content:"";position:absolute;inset:0;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.12 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  mix-blend-mode:overlay;opacity:.6;
+}
+
+/* ---------- 状态标签 status ---------- */
+.status-tag{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:var(--serif-cn);font-weight:600;font-size:11.5px;
+  padding:3px 9px;border-radius:2px;letter-spacing:.04em;
+  border:1px solid currentColor;
+}
+.status-tag .dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.st-want    { color:#7a5a1a; background:rgba(168,127,46,.12); }   /* 想看 - 金 */
+.st-watching{ color:#2a5c4a; background:rgba(42,92,74,.12); }      /* 在看 - 苔绿 */
+.st-done    { color:var(--oxblood); background:rgba(122,46,42,.10); } /* 已完成 - 酒红 */
+.st-rewatch { color:#6a3a6a; background:rgba(106,58,106,.12); }    /* 想重温 - 紫 */
+.st-pause   { color:var(--ink-mute); background:rgba(131,113,92,.12); } /* 搁置 - 灰 */
+
+/* 卡片上的状态角标 */
+.card .status-corner{
+  position:absolute;top:8px;right:8px;z-index:2;
+  font-family:var(--serif-cn);font-weight:700;font-size:10.5px;
+  padding:2px 7px;border-radius:1px;letter-spacing:.05em;
+  backdrop-filter:blur(4px);
+}
+
+/* ---------- 情绪标签 moodTags ---------- */
+.mood-tags{display:flex;flex-wrap:wrap;gap:6px}
+.mood-tag{
+  font-family:var(--serif-cn);font-weight:500;font-size:12px;
+  color:var(--oxblood);background:rgba(122,46,42,.08);
+  border:1px solid rgba(122,46,42,.25);
+  padding:3px 10px;border-radius:14px;letter-spacing:.02em;
+}
+.mood-suggest{
+  display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;
+}
+.mood-suggest .ms{
+  font-family:var(--serif-cn);font-size:11.5px;color:var(--ink-mute);
+  background:var(--paper-3);border:1px solid var(--rule-soft);
+  padding:3px 9px;border-radius:14px;cursor:pointer;transition:all .2s;
+}
+.mood-suggest .ms:hover{color:var(--oxblood);border-color:var(--oxblood)}
+
+/* ---------- 心动瞬间 highlight 摘录框 ---------- */
+.detail-highlight{
+  position:relative;margin-top:6px;
+  background:var(--paper-3);
+  border:1px solid var(--rule);
+  border-left:4px solid var(--oxblood);
+  padding:24px 24px 20px;
+  border-radius:0 3px 3px 0;
+  overflow:hidden;
+}
+.detail-highlight::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  mix-blend-mode:multiply;opacity:.5;
+}
+.detail-highlight .hl-kicker{
+  font-family:var(--serif);font-style:italic;font-size:11px;
+  color:var(--oxblood);letter-spacing:.22em;text-transform:uppercase;
+  display:flex;align-items:center;gap:8px;position:relative;
+}
+.detail-highlight .hl-kicker::after{
+  content:"";flex:1;height:1px;background:var(--rule);
+}
+.detail-highlight .hl-title{
+  font-family:var(--serif-cn);font-weight:700;font-size:14px;
+  color:var(--ink-soft);margin-top:6px;position:relative;
+}
+.detail-highlight .hl-text{
+  font-family:var(--serif-cn);font-size:18px;line-height:1.85;
+  color:var(--ink);margin-top:12px;position:relative;font-weight:500;
+}
+.detail-highlight .hl-text::before{
+  content:"\201C";font-family:var(--serif);font-size:56px;color:var(--gold-soft);
+  position:absolute;top:-18px;left:-6px;line-height:1;opacity:.6;
+}
+.detail-highlight .hl-text .inner{position:relative;padding-left:14px;display:block}
+
+/* ---------- 状态筛选栏 ---------- */
+.filter-bar .chip.st-chip{font-size:12.5px;padding:6px 12px}
+.filter-bar .chip.st-chip .en{font-size:10px}
+.filter-bar .sep{
+  width:1px;align-self:stretch;background:var(--rule);margin:0 6px;
+}
+
+/* ---------- 备份按钮 ---------- */
+.btn-backup{
+  font-family:var(--sans);font-size:12.5px;font-weight:500;
+  background:var(--paper-3);color:var(--ink-soft);
+  border:1px solid var(--rule);cursor:pointer;
+  padding:8px 13px;border-radius:2px;letter-spacing:.04em;
+  transition:all .25s;display:inline-flex;align-items:center;gap:6px;
+}
+.btn-backup:hover{border-color:var(--ink);color:var(--ink);background:var(--paper-card)}
+.btn-backup svg{width:13px;height:13px}
+
+/* ---------- 年度奖项 ---------- */
+.year-awards{margin-bottom:56px}
+.year-awards h3{font-family:var(--serif-cn);font-weight:700;font-size:28px;margin-bottom:6px}
+.year-awards h3 .en{font-family:var(--serif);font-style:italic;font-size:16px;color:var(--ink-mute);font-weight:400;margin-left:10px}
+.year-awards .hint{font-family:var(--serif);font-style:italic;font-size:13px;color:var(--ink-mute);margin-bottom:28px}
+.awards-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.award-card{
+  background:var(--paper-card);border:1px solid var(--rule-soft);
+  padding:24px;border-radius:2px;position:relative;overflow:hidden;
+  transition:transform .3s, box-shadow .3s;cursor:pointer;
+}
+.award-card:hover{transform:translateY(-3px);box-shadow:0 10px 26px var(--shadow-soft)}
+.award-card.empty-award{cursor:default}
+.award-card.empty-award:hover{transform:none;box-shadow:none}
+.award-card .award-ribbon{
+  position:absolute;top:0;right:0;
+  font-family:var(--serif);font-style:italic;font-size:11px;
+  color:var(--gold);letter-spacing:.16em;text-transform:uppercase;
+  background:var(--ink);padding:4px 12px;border-radius:0 2px 0 4px;
+}
+.award-card .award-name{
+  font-family:var(--serif-cn);font-weight:900;font-size:20px;color:var(--oxblood);
+  line-height:1.2;
+}
+.award-card .award-en{
+  font-family:var(--serif);font-style:italic;font-size:12px;color:var(--ink-mute);
+  margin-top:3px;display:block;
+}
+.award-card .award-winner{
+  display:flex;gap:14px;align-items:flex-start;margin-top:16px;
+}
+.award-card .award-cover{
+  width:54px;height:72px;border-radius:2px;overflow:hidden;flex-shrink:0;
+  box-shadow:0 3px 8px var(--shadow-soft);
+}
+.award-card .award-info .t{
+  font-family:var(--serif-cn);font-weight:700;font-size:15px;color:var(--ink);line-height:1.3;
+}
+.award-card .award-info .m{
+  font-family:var(--serif);font-style:italic;font-size:11.5px;color:var(--ink-mute);margin-top:3px;
+}
+.award-card .award-info .why{
+  font-family:var(--serif-cn);font-size:12.5px;color:var(--ink-soft);margin-top:6px;line-height:1.6;
+}
+.award-card .empty-text{
+  font-family:var(--serif-cn);font-size:13.5px;color:var(--ink-mute);
+  margin-top:14px;line-height:1.7;font-style:italic;
+}
+.award-card .empty-text .en{
+  font-family:var(--serif);font-size:11.5px;display:block;margin-top:4px;opacity:.8;
+}
+
+/* 响应式补充 */
+@media (max-width:720px){
+  .awards-grid{grid-template-columns:1fr}
+  .topbar .btn-backup span.lbl{display:none}
+  .detail-highlight{padding:18px 16px 14px}
+  .detail-highlight .hl-text{font-size:16px}
+}
+
+/* 响应式 */
+@media (max-width:1100px){
+  .grid{grid-template-columns:repeat(4,1fr)}
+  .stats-grid{grid-template-columns:repeat(3,1fr)}
+  .picks-list{grid-template-columns:repeat(2,1fr)}
+  .hero{grid-template-columns:1fr;gap:32px}
+  .home-cols{grid-template-columns:1fr}
+  .year-grid{grid-template-columns:1fr}
+}
+
+/* ---------- 移动端底部快捷栏 ---------- */
+.bottom-bar{
+  display:none;position:fixed;left:0;right:0;bottom:0;z-index:60;
+  background:rgba(239,230,210,.96);backdrop-filter:blur(10px);
+  border-top:1px solid var(--rule);
+  padding:8px 12px calc(8px + env(safe-area-inset-bottom));
+  justify-content:space-around;align-items:center;gap:6px;
+}
+.bottom-bar .bb-btn{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  background:none;border:none;cursor:pointer;
+  font-family:var(--serif-cn);font-size:11px;color:var(--ink-soft);
+  padding:4px 10px;border-radius:2px;transition:color .2s;
+}
+.bottom-bar .bb-btn svg{width:20px;height:20px}
+.bottom-bar .bb-btn.active{color:var(--oxblood)}
+.bottom-bar .bb-btn:hover{color:var(--oxblood)}
+.bottom-bar .bb-add{
+  flex:0 0 auto;background:var(--ink);color:var(--paper);
+  font-family:var(--serif-cn);font-weight:700;font-size:13px;
+  padding:10px 20px;border-radius:24px;letter-spacing:.05em;
+  display:flex;align-items:center;gap:6px;
+}
+.bottom-bar .bb-add svg{width:16px;height:16px}
+.bottom-bar .bb-add:active{transform:scale(.96)}
+
+@media (max-width:720px){
+  .topbar{padding:10px 14px;gap:8px;flex-wrap:wrap}
+  .topbar .brand .en{display:none}
+  .topbar .brand .mark{font-size:22px}
+  .nav{display:none}                       /* 移动端导航移到底部栏 */
+  .search{width:100%;order:5;margin-top:4px}
+  .topbar .btn-add{display:none}           /* 移动端用底部栏的加号 */
+  .topbar .btn-backup span.lbl{display:none}
+  .topbar .btn-backup{padding:8px 10px}
+  .view{padding:24px 14px 96px}            /* 底部留出空间 */
+  .bottom-bar{display:flex}
+  .hero h1{font-size:46px}
+  .hero h1 .small{font-size:18px}
+  .year-big{font-size:96px}
+  .year-total{font-size:64px}
+  .grid{grid-template-columns:repeat(2,1fr);gap:20px 14px}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .picks-list{grid-template-columns:1fr}
+  .form-row.two,.form-row.three{grid-template-columns:1fr}
+  .type-picker{grid-template-columns:repeat(3,1fr)}
+  .month-chart{gap:4px}
+  .month-col .mlbl{font-size:9px}
+  .form-view{max-width:100%}
+  .field input,.field select,.field textarea{font-size:16px}  /* 避免 iOS 缩放 */
+  .drawer{width:100vw}
+  .cover-upload{flex-direction:column}
+  .cover-preview{width:100%;height:160px}
+  .awards-grid{grid-template-columns:1fr}
+  .detail-highlight{padding:18px 16px 14px}
+  .detail-highlight .hl-text{font-size:16px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- 顶栏 -->
+  <header class="topbar">
+    <div class="brand" onclick="go('home')">
+      <span class="mark">拾光</span>
+      <span class="en">Shíguāng</span>
+    </div>
+    <nav class="nav">
+      <button data-view="home" onclick="go('home')">首页<span class="en">Home</span></button>
+      <button data-view="library" onclick="go('library')">光影阁<span class="en">Library</span></button>
+      <button data-view="year" onclick="go('year')">年度志<span class="en">Annual</span></button>
+    </nav>
+    <div class="spacer"></div>
+    <div class="search">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="searchInput" placeholder="搜寻作品…" oninput="onSearch(this.value)" />
+    </div>
+    <button class="btn-backup" onclick="exportBackup()" title="导出 JSON 备份">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      <span class="lbl">导出</span>
+    </button>
+    <button class="btn-backup" onclick="document.getElementById('importFile').click()" title="导入 JSON 备份">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+      <span class="lbl">导入</span>
+    </button>
+    <input type="file" id="importFile" accept="application/json,.json" style="display:none" onchange="onImportPick(event)" />
+    <button class="btn-add" onclick="go('add')">＋ 记一笔</button>
+  </header>
+
+  <!-- 首页 -->
+  <section class="view" id="view-home">
+    <div class="hero">
+      <div>
+        <div class="kicker">A Personal Archive · 个人光影档案</div>
+        <h1 style="margin-top:14px">光影书游<br/><span class="accent">皆为拾光</span>
+          <span class="small">Movies, shows, books, comics, games &amp; audio dramas — gathered here.</span>
+        </h1>
+      </div>
+      <p class="lede">在这里收藏每一部看过的电影、追过的剧、读过的书与漫画、玩过的游戏、听过的广播剧。打分、记下只言片语的感受，到了年末，翻阅一本属于自己的光阴志。</p>
+    </div>
+
+    <div class="year-badge">
+      <span class="yr" id="homeYearNum">2025</span>
+      <span class="lbl">This Year · 今年拾光</span>
+    </div>
+
+    <div class="stats-grid" id="statsGrid"></div>
+
+    <div class="home-cols">
+      <div>
+        <div class="kicker">Recently Logged · 最近拾光</div>
+        <h2 class="section-title" style="margin:8px 0 6px">近作手记<span class="en">Latest entries</span></h2>
+        <div class="rule"></div>
+        <div class="recent-list" id="recentList"></div>
+      </div>
+      <div>
+        <div class="kicker">Today's Pick · 今日重温</div>
+        <h2 class="section-title" style="margin:8px 0 18px">随手一拾</h2>
+        <div id="pickCard"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 光影阁 -->
+  <section class="view" id="view-library">
+    <div class="lib-head">
+      <div class="left">
+        <div class="kicker">The Library</div>
+        <h2 style="margin-top:8px">光影阁<span class="en">Library</span></h2>
+      </div>
+      <div class="count" id="libCount"></div>
+    </div>
+    <div class="filter-bar" id="filterBar"></div>
+    <select class="sort-sel" id="sortSel" onchange="onSort(this.value)" style="position:absolute;left:-9999px"></select>
+    <div class="grid" id="libGrid"></div>
+  </section>
+
+  <!-- 添加 / 编辑 -->
+  <section class="view" id="view-add">
+    <div class="form-view">
+      <div class="kicker">Log a New Entry</div>
+      <h2 style="margin-top:8px" id="formTitle">记一笔<span class="en">New entry</span></h2>
+      <p class="lede">把刚刚看完的作品收进档案。哪怕只是一句感受，多年后再翻起，也是一束光。</p>
+      <form class="form" id="entryForm" onsubmit="submitEntry(event)">
+        <div class="field">
+          <label>类型 Type</label>
+          <div class="type-picker" id="typePicker"></div>
+        </div>
+        <div class="form-row two">
+          <div class="field">
+            <label>标题 Title</label>
+            <input id="f_title" required placeholder="如：霸王别姬" />
+          </div>
+          <div class="field">
+            <label>原名 Original Title</label>
+            <input id="f_otitle" placeholder="Farewell My Concubine" />
+          </div>
+        </div>
+        <div class="form-row two">
+          <div class="field">
+            <label>创作者 Creator</label>
+            <input id="f_creator" placeholder="导演 / 作者 / 开发商 / 剧组" />
+          </div>
+          <div class="field">
+            <label>年份 Year</label>
+            <input id="f_year" type="number" placeholder="1993" />
+          </div>
+        </div>
+        <div class="form-row two">
+          <div class="field">
+            <label>类型标签 Genre</label>
+            <input id="f_genre" placeholder="剧情 / 历史 / 科幻…" />
+          </div>
+          <div class="field">
+            <label>状态 Status</label>
+            <select id="f_status">
+              <option value="want">想看 · Want to see</option>
+              <option value="watching">在看 · Watching</option>
+              <option value="done">已完成 · Finished</option>
+              <option value="rewatch">想重温 · Re-watch</option>
+              <option value="pause">搁置 · On hold</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row two">
+          <div class="field">
+            <label>完成日期 Date Finished</label>
+            <input id="f_date" type="date" />
+          </div>
+          <div class="field">
+            <label>评分 Rating</label>
+            <div class="rating-input" id="ratingInput"></div>
+          </div>
+        </div>
+        <div class="field">
+          <label>情绪标签 Mood Tags <span style="color:var(--ink-mute);font-style:normal;text-transform:none;letter-spacing:0">（中文逗号或空格分隔）</span></label>
+          <input id="f_mood" placeholder="治愈、震撼、后劲大…" />
+          <div class="mood-suggest" id="moodSuggest"></div>
+        </div>
+        <div class="field">
+          <label>封面 Cover</label>
+          <div class="cover-upload" id="coverUpload">
+            <div class="cover-preview" id="coverPreview">
+              <div class="ph" id="coverPh">尚未上传<br/>将使用色相生成</div>
+            </div>
+            <div class="ops">
+              <div class="hint-txt">上传一张封面图，建议竖图（3:4）。<span class="en">Upload a portrait image. Auto-compressed on save.</span></div>
+              <div class="cu-btns">
+                <label class="cu-btn">选择图片<input type="file" id="f_cover" accept="image/*" onchange="onCoverPick(event)" /></label>
+                <button type="button" class="cu-btn danger" id="coverClearBtn" onclick="clearCover()" style="display:none">移除封面</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label>封面色相 Cover Hue <span style="color:var(--ink-mute);font-style:normal;text-transform:none;letter-spacing:0">（无上传图时使用）</span></label>
+          <div class="hue-picker" id="huePicker"></div>
+        </div>
+        <div class="field">
+          <label>简评 Review</label>
+          <textarea id="f_review" placeholder="写下此刻的感受，哪怕只有一句…"></textarea>
+        </div>
+        <div class="field">
+          <label>心动瞬间 Favorite Moment</label>
+          <textarea id="f_highlight" placeholder="最戳你的一句话、一个画面、一个角色或一个瞬间…" style="font-family:var(--serif-cn);font-size:15px"></textarea>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-ghost" onclick="go('home')">取消</button>
+          <button type="submit" class="btn btn-primary" id="submitBtn">收入档案</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- 年度志 -->
+  <section class="view" id="view-year">
+    <div class="year-head">
+      <div class="year-switch">
+        <button onclick="shiftYear(-1)" id="yPrev">‹</button>
+        <span class="kicker" id="yearKicker">Annual Review</span>
+        <button onclick="shiftYear(1)" id="yNext">›</button>
+      </div>
+      <div class="year-big" id="yearBig">20<span class="accent">25</span></div>
+      <div class="year-sub" id="yearSub">年度拾光志<span class="en"> · A year in review</span></div>
+    </div>
+
+    <div class="year-grid">
+      <div>
+        <div class="kicker">Total This Year</div>
+        <div class="year-total" id="yearTotal">0<span class="unit">件</span></div>
+        <div class="year-total-lbl">件作品收入档案 · entries archived</div>
+      </div>
+      <div>
+        <div class="kicker">By Category · 类目分布</div>
+        <div class="cat-breakdown" id="catBreakdown" style="margin-top:18px"></div>
+      </div>
+    </div>
+
+    <div class="monthly">
+      <h3>月度拾光<span class="en">Monthly rhythm</span></h3>
+      <div class="hint">每一个月落下的光，汇成一条河。</div>
+      <div class="month-chart" id="monthChart"></div>
+    </div>
+
+    <div class="top-picks">
+      <h3>年度之选<span class="en">Top of the year</span></h3>
+      <div class="hint">这一年里，最让你心动的那几束光。</div>
+      <div class="picks-list" id="picksList"></div>
+    </div>
+
+    <div class="year-awards">
+      <h3>年度奖项<span class="en">Annual awards</span></h3>
+      <div class="hint">由你的评分与情绪标签，自动颁出的小奖。</div>
+      <div class="awards-grid" id="awardsGrid"></div>
+    </div>
+
+    <div class="year-note">
+      <div class="kicker">A Note to Myself</div>
+      <div class="text" id="yearNoteText"></div>
+      <div class="sig" id="yearNoteSig"></div>
+    </div>
+  </section>
+
+</div>
+
+<!-- 移动端底部快捷栏 -->
+<nav class="bottom-bar" id="bottomBar">
+  <button class="bb-btn active" data-view="home" onclick="go('home')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 11l9-8 9 8v10a2 2 0 0 1-2 2h-4v-7H9v7H5a2 2 0 0 1-2-2z"/></svg>
+    首页
+  </button>
+  <button class="bb-btn" data-view="library" onclick="go('library')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="6" height="16" rx="1"/><rect x="11" y="4" width="6" height="16" rx="1"/><path d="M19 4l2 16"/></svg>
+    光影阁
+  </button>
+  <button class="bb-add" onclick="go('add')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>
+    记一笔
+  </button>
+  <button class="bb-btn" data-view="year" onclick="go('year')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+    年度志
+  </button>
+  <button class="bb-btn" onclick="exportBackup()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    导出
+  </button>
+</nav>
+
+<!-- 详情抽屉 -->
+<div class="overlay" id="overlay" onclick="closeDetail()"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-head">
+    <span class="k">Entry · 档案</span>
+    <button class="drawer-close" onclick="closeDetail()">×</button>
+  </div>
+  <div class="drawer-body" id="drawerBody"></div>
+</aside>
+
+<script>
+/* ============================================================
+   数据与状态
+   ============================================================ */
+const TYPES = [
+  {key:'movie', ch:'影', en:'Film'},
+  {key:'tv',    ch:'剧', en:'TV'},
+  {key:'novel', ch:'书', en:'Novel'},
+  {key:'comic', ch:'画', en:'Comic'},
+  {key:'game',  ch:'游', en:'Game'},
+  {key:'audio', ch:'声', en:'Audio'},
+];
+const TYPE_MAP = Object.fromEntries(TYPES.map(t=>[t.key,t]));
+
+const STATUSES = [
+  {key:'want',     ch:'想看',   en:'Want to see', cls:'st-want'},
+  {key:'watching', ch:'在看',   en:'Watching',    cls:'st-watching'},
+  {key:'done',     ch:'已完成', en:'Finished',    cls:'st-done'},
+  {key:'rewatch',  ch:'想重温', en:'Re-watch',    cls:'st-rewatch'},
+  {key:'pause',    ch:'搁置',   en:'On hold',     cls:'st-pause'},
+];
+const STATUS_MAP = Object.fromEntries(STATUSES.map(s=>[s.key,s]));
+
+const MOOD_SUGGESTIONS = ['治愈','震撼','心碎','上头','后劲大','想二刷','电子榨菜','精神续命'];
+
+const HUES = [358, 24, 42, 130, 174, 210, 258, 318];
+
+const SAMPLE = [
+  {type:'movie',title:'霸王别姬',otitle:'Farewell My Concubine',creator:'陈凯歌',year:1993,genre:'剧情 / 历史',rating:5,date:'2025-01-12',hue:358,status:'done',moodTags:['心碎','后劲大','想二刷'],highlight:'说的是一辈子！差一年，一个月，一天，一个时辰，都不算一辈子。',review:'一颦一笑皆是戏，一悲一喜皆是人。程蝶衣的痴，是这世上最奢侈的东西。'},
+  {type:'movie',title:'银翼杀手2049',otitle:'Blade Runner 2049',creator:'丹尼斯·维伦纽瓦',year:2017,genre:'科幻 / 黑色电影',rating:4.5,date:'2025-02-03',hue:210,status:'done',moodTags:['震撼','后劲大'],highlight:'所有最美好的回忆，都是别人留下的。',review:'废墟之美，孤独之诗。每一帧都可裱框悬挂。'},
+  {type:'tv',title:'漫长的季节',otitle:'The Long Season',creator:'辛爽',year:2023,genre:'悬疑 / 文艺',rating:5,date:'2025-01-28',hue:42,status:'done',moodTags:['后劲大','心碎','想二刷'],highlight:'往前看，别回头。',review:'往前看，别回头。东北的秋天，下了一场一辈子的雨。'},
+  {type:'tv',title:'伦敦生活',otitle:'Fleabag',creator:'Phoebe Waller-Bridge',year:2016,genre:'喜剧 / 剧情',rating:4.5,date:'2025-03-15',hue:318,status:'done',moodTags:['上头','心碎'],highlight:'I love you. —— It\'ll pass.',review:'破碎又锋利，温柔又残忍。第四面墙是她最后的避难所。'},
+  {type:'novel',title:'百年孤独',otitle:'Cien años de soledad',creator:'加西亚·马尔克斯',year:1967,genre:'魔幻现实主义',rating:5,date:'2025-02-20',hue:130,status:'done',moodTags:['震撼','后劲大','精神续命'],highlight:'多年以后，面对行刑队，奥雷里亚诺·布恩迪亚上校将会回想起父亲带他去见识冰块的那个遥远的下午。',review:'多年以后，面对这本合上的书，我会想起翻开第一页的那个下午。'},
+  {type:'novel',title:'房思琪的初恋乐园',otitle:'',creator:'林奕含',year:2017,genre:'文学',rating:5,date:'2025-04-08',hue:358,status:'done',moodTags:['心碎','后劲大'],highlight:'她笑得像被钉在十字架上的耶稣，从此知道人间有一种痛，是无法复活的。',review:'文字美得像刀，每一句都在流血。读完后久久无法翻开下一本书。'},
+  {type:'comic',title:'灌篮高手',otitle:'SLAM DUNK',creator:'井上雄彦',year:1990,genre:'运动 / 青春',rating:5,date:'2025-03-02',hue:24,status:'done',moodTags:['上头','想二刷'],highlight:'因为我是天才。',review:'因为我是天才——不，是因为我拼命。湘北的夏天，永远热血。'},
+  {type:'comic',title:'迷宫饭',otitle:'ダンジョン飯',creator:'九井谅子',year:2014,genre:'奇幻 / 美食',rating:4.5,date:'2025-05-11',hue:174,status:'done',moodTags:['治愈','上头'],highlight:'吃饭是一件很神圣的事。',review:'用最认真的态度做最荒诞的事，世界观的扎实令人叹服。'},
+  {type:'game',title:'荒野大镖客：救赎2',otitle:'Red Dead Redemption 2',creator:'Rockstar',year:2018,genre:'开放世界 / 剧情',rating:5,date:'2025-02-25',hue:24,status:'done',moodTags:['震撼','后劲大','想二刷'],highlight:'I gave you all I had. —— Arthur Morgan',review:'亚瑟·摩根的故事，是电子游戏写给文学的一封情书。'},
+  {type:'game',title:'极乐迪斯科',otitle:'Disco Elysium',creator:'ZA/UM',year:2019,genre:'RPG / 文学',rating:5,date:'2025-04-19',hue:258,status:'done',moodTags:['震撼','精神续命','后劲大'],highlight:'真正的黑暗有着自己的光。',review:'它把哲学、政治、酒精与心碎，揉成了一款游戏。'},
+  {type:'audio',title:'默读',otitle:'',creator:'猫耳FM · 巫哲',year:2021,genre:'悬疑 / 剧情',rating:4,date:'2025-03-22',hue:210,status:'done',moodTags:['上头'],highlight:'人活着，总得相信点什么。',review:'声音里的张力和温度，让文字长出了皮肤。'},
+  {type:'movie',title:'花样年华',otitle:'In the Mood for Love',creator:'王家卫',year:2000,genre:'剧情 / 爱情',rating:5,date:'2025-05-05',hue:318,status:'rewatch',moodTags:['心碎','想二刷','后劲大'],highlight:'如果多一张船票，你会不会跟我走。',review:'如果多一张船票，你会不会跟我走。旗袍的褶皱里藏着整个时代。'},
+  {type:'novel',title:'三体',otitle:'The Three-Body Problem',creator:'刘慈欣',year:2008,genre:'科幻',rating:4.5,date:'2025-06-01',hue:174,status:'done',moodTags:['震撼'],highlight:'弱小和无知不是生存的障碍，傲慢才是。',review:'宇宙的黑暗森林里，文明是一声不敢出的大喊。'},
+  {type:'tv',title:'继承之战',otitle:'Succession',creator:'Jesse Armstrong',year:2018,genre:'剧情',rating:4.5,date:'2025-05-20',hue:42,status:'done',moodTags:['上头','后劲大'],highlight:'You can\'t make a Tomlette without breaking some Greggs.',review:'父权是一座监狱，所有人都是狱卒，也是囚徒。'},
+  {type:'game',title:'空洞骑士',otitle:'Hollow Knight',creator:'Team Cherry',year:2017,genre:'类银河战士 / 动作',rating:4.5,date:'2025-06-10',hue:258,status:'rewatch',moodTags:['治愈','震撼','想二刷'],highlight:'愿圣巢的荣光永存。',review:'一只小虫子的史诗。圣巢的废墟里，每一片寂静都在讲故事。'},
+  {type:'movie',title:'千与千寻',otitle:'千と千尋の神隠し',creator:'宫崎骏',year:2001,genre:'动画 / 奇幻',rating:5,date:'2024-12-24',hue:130,status:'rewatch',moodTags:['治愈','想二刷'],highlight:'不管发生什么，永远不要回头。',review:'记住自己的名字，才能找到回家的路。每年冬至都要重温。'},
+  {type:'novel',title:'活着',otitle:'To Live',creator:'余华',year:1993,genre:'文学',rating:5,date:'2024-11-30',hue:358,status:'done',moodTags:['心碎','后劲大','精神续命'],highlight:'人是为活着本身而活着，而不是为了活着之外的任何事物而活着。',review:'人是为活着本身而活着。读完合上书，窗外正好下雪。'},
+  {type:'comic',title:'进击的巨人',otitle:'進撃の巨人',creator:'谏山创',year:2009,genre:'奇幻 / 热血',rating:4.5,date:'2024-10-15',hue:24,status:'done',moodTags:['震撼','上头'],highlight:'世界是残酷的，但也很美。',review:'自由的代价，是一个永远没有正确答案的选择。'},
+];
+
+const state = {
+  entries: [],
+  view: 'home',
+  filter: 'all',
+  statusFilter: 'all',
+  sort: 'date',
+  search: '',
+  selectedId: null,
+  editingId: null,
+  formType: 'movie',
+  formRating: 4,
+  formHue: 358,
+  formCoverImg: null,
+  formStatus: 'done',
+  formMood: '',
+  formHighlight: '',
+  year: 2025,
+};
+
+/* ============================================================
+   持久化 —— IndexedDB 优先，localStorage 回退
+   ============================================================ */
+function migrateEntry(e){
+  // 兼容旧数据：补默认值
+  if(!e.status) e.status = 'done';
+  if(!Array.isArray(e.moodTags)) e.moodTags = [];
+  if(e.highlight == null) e.highlight = '';
+  if(e.coverImg == null) e.coverImg = null;
+  if(e.hue == null) e.hue = 358;
+  if(e.rating == null) e.rating = 0;
+  if(!e.id) e.id = uid();
+  return e;
+}
+
+/* IndexedDB 封装 */
+const IDB = {
+  db: null,
+  async open(){
+    return new Promise(resolve=>{
+      try{
+        const req = indexedDB.open('shiguang-db', 1);
+        req.onupgradeneeded = e=>{
+          const db = e.target.result;
+          if(!db.objectStoreNames.contains('entries')){
+            db.createObjectStore('entries', {keyPath:'id'});
+          }
+        };
+        req.onsuccess = e=>{ this.db = e.target.result; resolve(true); };
+        req.onerror = ()=>resolve(false);
+      }catch(e){ resolve(false); }
+    });
+  },
+  async getAll(){
+    return new Promise(resolve=>{
+      try{
+        const req = this.db.transaction('entries','readonly').objectStore('entries').getAll();
+        req.onsuccess = ()=>resolve(req.result||[]);
+        req.onerror = ()=>resolve(null);
+      }catch(e){ resolve(null); }
+    });
+  },
+  async bulkPut(arr){
+    return new Promise(resolve=>{
+      try{
+        const tx = this.db.transaction('entries','readwrite');
+        const store = tx.objectStore('entries');
+        arr.forEach(e=>store.put(e));
+        tx.oncomplete = ()=>resolve(true);
+        tx.onerror = ()=>resolve(false);
+      }catch(e){ resolve(false); }
+    });
+  },
+  async put(entry){
+    return new Promise(resolve=>{
+      try{
+        const tx = this.db.transaction('entries','readwrite');
+        tx.objectStore('entries').put(entry);
+        tx.oncomplete = ()=>resolve(true);
+        tx.onerror = ()=>resolve(false);
+      }catch(e){ resolve(false); }
+    });
+  },
+  async del(id){
+    return new Promise(resolve=>{
+      try{
+        const tx = this.db.transaction('entries','readwrite');
+        tx.objectStore('entries').delete(id);
+        tx.oncomplete = ()=>resolve(true);
+        tx.onerror = ()=>resolve(false);
+      }catch(e){ resolve(false); }
+    });
+  },
+  async clear(){
+    return new Promise(resolve=>{
+      try{
+        const tx = this.db.transaction('entries','readwrite');
+        tx.objectStore('entries').clear();
+        tx.oncomplete = ()=>resolve(true);
+        tx.onerror = ()=>resolve(false);
+      }catch(e){ resolve(false); }
+    });
+  }
+};
+
+/* 存储抽象层：IDB 优先，localStorage 回退 */
+const Store = {
+  useIDB: false,
+  async init(){
+    if(window.indexedDB){
+      this.useIDB = await IDB.open();
+    }
+    return this.useIDB;
+  },
+  async loadAll(){
+    if(this.useIDB){
+      const all = await IDB.getAll();
+      if(all && all.length) return all;
+      // IDB 为空 —— 尝试从 localStorage 迁移
+      const migrated = await this._migrateFromLS();
+      if(migrated) return migrated;
+      return null;
+    }
+    // 回退 localStorage
+    try{
+      const raw = localStorage.getItem('shiguang_entries');
+      if(raw) return JSON.parse(raw);
+    }catch(e){}
+    return null;
+  },
+  async _migrateFromLS(){
+    try{
+      const raw = localStorage.getItem('shiguang_entries');
+      if(!raw) return null;
+      const arr = JSON.parse(raw).map(migrateEntry);
+      if(!arr.length) return null;
+      await IDB.bulkPut(arr);
+      // 迁移完成后，询问是否清除旧 localStorage（不自动删）
+      const del = confirm(`已从旧版本迁移 ${arr.length} 条数据到本地数据库（IndexedDB）。\n\n是否清除浏览器中的旧版 localStorage 备份？\n（建议清除以避免混淆；已迁移的数据不会丢失）`);
+      if(del){ try{ localStorage.removeItem('shiguang_entries'); }catch(e){} }
+      return arr;
+    }catch(e){ return null; }
+  },
+  async saveAll(entries){
+    if(this.useIDB) return IDB.bulkPut(entries);
+    try{ localStorage.setItem('shiguang_entries', JSON.stringify(entries)); return true; }catch(e){ return false; }
+  },
+  async saveOne(entry){
+    if(this.useIDB) return IDB.put(entry);
+    try{ localStorage.setItem('shiguang_entries', JSON.stringify(state.entries)); return true; }catch(e){ return false; }
+  },
+  async deleteOne(id){
+    if(this.useIDB) return IDB.del(id);
+    try{ localStorage.setItem('shiguang_entries', JSON.stringify(state.entries)); return true; }catch(e){ return false; }
+  },
+  async clearAll(){
+    if(this.useIDB) return IDB.clear();
+    try{ localStorage.removeItem('shiguang_entries'); return true; }catch(e){ return false; }
+  }
+};
+
+async function load(){
+  await Store.init();
+  const all = await Store.loadAll();
+  if(all && all.length){
+    state.entries = all.map(migrateEntry);
+  }else{
+    state.entries = SAMPLE.map((e,i)=>({id:'e'+(i+1),...e}));
+    await Store.saveAll(state.entries);
+  }
+}
+async function save(){
+  await Store.saveAll(state.entries);
+}
+
+/* ============================================================
+   备份 导出 / 导入
+   ============================================================ */
+function exportBackup(){
+  const data = {
+    app: 'shiguang',
+    version: 1,
+    exportedAt: new Date().toISOString(),
+    count: state.entries.length,
+    entries: state.entries,
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const d = new Date();
+  const stamp = `${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}`;
+  a.href = url;
+  a.download = `shiguang-backup-${stamp}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+function onImportPick(ev){
+  const file = ev.target.files && ev.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = async ()=>{
+    try{
+      const data = JSON.parse(reader.result);
+      let incoming;
+      if(Array.isArray(data)) incoming = data;                 // 兼容纯数组
+      else if(Array.isArray(data.entries)) incoming = data.entries;
+      else throw new Error('JSON 中找不到 entries 数组');
+      if(!incoming.every(e=>e && typeof e.title==='string')){
+        throw new Error('数据格式校验失败：存在缺少 title 的条目');
+      }
+      incoming = incoming.map(migrateEntry);
+      const mode = confirmImportMode(incoming.length);
+      if(!mode){ ev.target.value=''; return; }
+      if(mode==='replace'){
+        state.entries = incoming.map(e=>({id: e.id||uid(), ...e}));
+        await Store.clearAll();
+        await Store.saveAll(state.entries);
+        alert(`已覆盖导入 ${state.entries.length} 条数据。`);
+      }else{
+        // merge：按 id 去重，新条目追加
+        const existIds = new Set(state.entries.map(e=>e.id));
+        let added=0;
+        incoming.forEach(e=>{
+          if(!e.id || !existIds.has(e.id)){
+            state.entries.push({id:uid(), ...e});
+            added++;
+          }else{
+            const idx = state.entries.findIndex(x=>x.id===e.id);
+            state.entries[idx] = {...state.entries[idx], ...e};
+          }
+        });
+        await Store.saveAll(state.entries);
+        alert(`合并完成：新增 ${added} 条，更新 ${incoming.length-added} 条。`);
+      }
+      ev.target.value='';
+      renderCurrent();
+    }catch(err){
+      alert('导入失败：'+err.message);
+      ev.target.value='';
+    }
+  };
+  reader.onerror = ()=>{ alert('读取文件失败'); ev.target.value=''; };
+  reader.readAsText(file, 'utf-8');
+}
+function confirmImportMode(n){
+  const ok = confirm(`检测到 ${n} 条备份数据。\n\n点击「确定」= 覆盖现有数据（推荐用于换设备恢复）\n点击「取消」= 改为合并（按 id 去重，保留现有）\n\n或再次取消整个导入？`);
+  if(ok) return 'replace';
+  const merge = confirm('已选择合并模式：将按 id 去重合并到现有数据。\n\n点击「确定」确认合并\n点击「取消」放弃导入');
+  return merge ? 'merge' : null;
+}
+
+/* ============================================================
+   导航
+   ============================================================ */
+function go(view){
+  state.view = view;
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.getElementById('view-'+view).classList.add('active');
+  document.querySelectorAll('.nav button').forEach(b=>{
+    b.classList.toggle('active', b.dataset.view===view);
+  });
+  document.querySelectorAll('.bottom-bar .bb-btn[data-view]').forEach(b=>{
+    b.classList.toggle('active', b.dataset.view===view);
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(view==='home') renderHome();
+  if(view==='library') renderLibrary();
+  if(view==='year') renderYear();
+  if(view==='add') prepareForm();
+}
+
+/* ============================================================
+   工具
+   ============================================================ */
+function uid(){ return 'e'+Date.now()+Math.floor(Math.random()*999); }
+function byId(id){ return state.entries.find(e=>e.id===id); }
+function starsHTML(rating, size){
+  const s = size||13;
+  let html = '';
+  for(let i=1;i<=5;i++){
+    const filled = rating >= i;
+    const half = !filled && rating >= i-0.5;
+    html += `<svg width="${s}" height="${s}" viewBox="0 0 24 24">
+      <path class="${filled||half?'star-fill':'star-empty'}" d="M12 2l2.9 6.3 6.9.7-5.1 4.7 1.4 6.8L12 17.8 5.9 20.5l1.4-6.8L2.2 9l6.9-.7z"/>
+    </svg>`;
+  }
+  return html;
+}
+function coverStyle(hue){
+  const h2 = (hue+18)%360;
+  return `background:linear-gradient(150deg, hsl(${hue},42%,32%), hsl(${h2},38%,18%))`;
+}
+function coverHTML(e, big){
+  const t = TYPE_MAP[e.type];
+  if(e.coverImg){
+    return `<div class="cover-bg" style="background-image:url('${e.coverImg}');background-size:cover;background-position:center"></div>
+      <div class="cover-inner" style="background:linear-gradient(180deg,transparent 45%,rgba(0,0,0,.62) 100%)">
+        <span class="cv-tag">${t.ch}</span>
+        <div>
+          <div class="cv-title">${e.title}</div>
+          ${e.otitle?`<div class="cv-en">${e.otitle}</div>`:''}
+        </div>
+      </div>`;
+  }
+  return `<div class="cover-bg" style="${coverStyle(e.hue||358)}"></div>
+    <div class="cover-inner">
+      <span class="cv-tag">${t.ch}</span>
+      <div>
+        <div class="cv-title">${e.title}</div>
+        ${e.otitle?`<div class="cv-en">${e.otitle}</div>`:''}
+      </div>
+    </div>`;
+}
+function fmtDate(d){
+  if(!d) return '';
+  const m = d.slice(5).replace('-','.');
+  return m;
+}
+function yearOf(d){ return d?parseInt(d.slice(0,4)):null; }
+
+/* ============================================================
+   首页
+   ============================================================ */
+function renderHome(){
+  const yr = state.year;
+  const yrEntries = state.entries.filter(e=>yearOf(e.date)===yr);
+  document.getElementById('homeYearNum').textContent = yr;
+
+  // stats
+  const counts = {};
+  TYPES.forEach(t=>counts[t.key]=0);
+  yrEntries.forEach(e=>counts[e.type]=(counts[e.type]||0)+1);
+  const total = yrEntries.length;
+  document.getElementById('statsGrid').innerHTML = TYPES.map(t=>`
+    <div class="stat-card" onclick="setFilter('${t.key}')">
+      <div class="ch">${t.ch}</div>
+      <span class="en">${t.en}</span>
+      <div class="num">${counts[t.key]}<span class="unit">件</span></div>
+    </div>`).join('');
+
+  // recent
+  const recent = [...state.entries].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,6);
+  document.getElementById('recentList').innerHTML = recent.map(e=>`
+    <div class="recent-item" onclick="openDetail('${e.id}')">
+      <div class="mini-cover">${coverHTML(e)}</div>
+      <div class="info">
+        <div class="t">${e.title}</div>
+        <div class="m">${TYPE_MAP[e.type].en} · ${e.creator||''} · ${e.year||''}</div>
+      </div>
+      <span class="tag">${TYPE_MAP[e.type].ch}</span>
+      <span class="date">${fmtDate(e.date)}</span>
+    </div>`).join('');
+
+  // pick
+  const rated = state.entries.filter(e=>e.rating>=4.5);
+  const pick = rated[Math.floor(Math.random()*rated.length)] || state.entries[0];
+  if(pick){
+    document.getElementById('pickCard').innerHTML = `
+      <div class="pick-card">
+        <div class="kicker">Today's Pick</div>
+        <h3>${pick.title}</h3>
+        <div class="meta">${TYPE_MAP[pick.type].ch} · ${TYPE_MAP[pick.type].en} · ${pick.creator||''} · ${pick.year||''}</div>
+        <div class="quote">${pick.review||'尚未留下只言片语。'}</div>
+        <button class="go" onclick="openDetail('${pick.id}')">翻开档案 →</button>
+      </div>`;
+  }
+}
+
+/* ============================================================
+   光影阁
+   ============================================================ */
+function renderFilterBar(){
+  const counts = {all:state.entries.length};
+  TYPES.forEach(t=>counts[t.key]=0);
+  state.entries.forEach(e=>counts[e.type]=(counts[e.type]||0)+1);
+  const chips = [`<button class="chip ${state.filter==='all'?'active':''}" onclick="setFilter('all')">全部<span class="en">All · ${counts.all}</span></button>`]
+    .concat(TYPES.map(t=>`<button class="chip ${state.filter===t.key?'active':''}" onclick="setFilter('${t.key}')">${t.ch}<span class="en">${t.en} · ${counts[t.key]}</span></button>`));
+  // 状态筛选
+  chips.push(`<span class="sep"></span>`);
+  chips.push(`<button class="chip st-chip ${state.statusFilter==='all'?'active':''}" onclick="setStatusFilter('all')">全部状态<span class="en">All</span></button>`);
+  STATUSES.forEach(s=>{
+    const n = state.entries.filter(e=>e.status===s.key).length;
+    chips.push(`<button class="chip st-chip ${state.statusFilter===s.key?'active':''}" onclick="setStatusFilter('${s.key}')">${s.ch}<span class="en">${s.en} · ${n}</span></button>`);
+  });
+  chips.push(`<select class="sort-sel" onchange="onSort(this.value)">
+    <option value="date" ${state.sort==='date'?'selected':''}>按时间</option>
+    <option value="rating" ${state.sort==='rating'?'selected':''}>按评分</option>
+    <option value="title" ${state.sort==='title'?'selected':''}>按标题</option>
+  </select>`);
+  document.getElementById('filterBar').innerHTML = chips.join('');
+}
+function setFilter(k){ state.filter=k; renderLibrary(); }
+function setStatusFilter(k){ state.statusFilter=k; renderLibrary(); }
+function onSort(s){ state.sort=s; renderLibrary(); }
+function onSearch(v){ state.search=v.trim().toLowerCase(); if(state.view!=='library') go('library'); else renderLibrary(); }
+
+function renderLibrary(){
+  renderFilterBar();
+  let list = state.entries.slice();
+  if(state.filter!=='all') list = list.filter(e=>e.type===state.filter);
+  if(state.statusFilter!=='all') list = list.filter(e=>e.status===state.statusFilter);
+  if(state.search){
+    list = list.filter(e=>(e.title+e.otitle+e.creator+e.genre+(e.moodTags||[]).join('')).toLowerCase().includes(state.search));
+  }
+  if(state.sort==='date') list.sort((a,b)=>(b.date||'').localeCompare(a.date||''));
+  if(state.sort==='rating') list.sort((a,b)=>b.rating-a.rating);
+  if(state.sort==='title') list.sort((a,b)=>a.title.localeCompare(b.title,'zh'));
+
+  document.getElementById('libCount').textContent = `共 ${list.length} 件 · ${list.length} entries`;
+  const grid = document.getElementById('libGrid');
+  if(!list.length){
+    grid.innerHTML = `<div class="empty"><div class="big">档案库还空着</div><div class="en">Nothing here yet — log your first entry.</div></div>`;
+    return;
+  }
+  grid.innerHTML = list.map((e,i)=>{
+    const st = STATUS_MAP[e.status] || STATUS_MAP.done;
+    return `
+    <div class="card" style="animation-delay:${i*0.04}s" onclick="openDetail('${e.id}')">
+      <div class="cover-wrap">
+        <div class="cover">${coverHTML(e)}</div>
+        <span class="status-corner ${st.cls}">${st.ch}</span>
+      </div>
+      <div class="meta">
+        <div class="t">${e.title}</div>
+        <div class="m">${e.creator||''} · ${e.year||''}</div>
+        <div class="stars">${starsHTML(e.rating)}<span class="rating-num">${e.rating.toFixed(1)}</span></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ============================================================
+   详情
+   ============================================================ */
+function openDetail(id){
+  state.selectedId = id;
+  const e = byId(id);
+  if(!e) return;
+  const t = TYPE_MAP[e.type];
+  const st = STATUS_MAP[e.status] || STATUS_MAP.done;
+  const moods = (e.moodTags||[]);
+  document.getElementById('drawerBody').innerHTML = `
+    <div class="detail-cover">${coverHTML(e)}</div>
+    <div class="detail-title">${e.title}</div>
+    ${e.otitle?`<div class="detail-ot">${e.otitle}</div>`:''}
+    <div class="detail-tag-row">
+      <span class="tag">${t.ch} · ${t.en}</span>
+      <span class="status-tag ${st.cls}"><span class="dot"></span>${st.ch} · ${st.en}</span>
+      ${e.genre?e.genre.split(/[\/·、]/).map(g=>`<span class="genre">${g.trim()}</span>`).join(''):''}
+    </div>
+    <div class="detail-rating">
+      <span class="lbl">My Rating</span>
+      <span class="stars">${starsHTML(e.rating,18)}</span>
+      <span class="num">${e.rating.toFixed(1)}</span>
+    </div>
+    <div class="detail-section">
+      <div class="lbl">Basic Info · 资料</div>
+      <dl class="info-rows">
+        <dt>Creator</dt><dd>${e.creator||'—'}</dd>
+        <dt>Year</dt><dd>${e.year||'—'}</dd>
+        <dt>Genre</dt><dd>${e.genre||'—'}</dd>
+        <dt>Type</dt><dd>${t.ch} ${t.en}</dd>
+        <dt>Status</dt><dd>${st.ch} · ${st.en}</dd>
+      </dl>
+    </div>
+    ${moods.length?`<div class="detail-section">
+      <div class="lbl">Mood · 情绪标签</div>
+      <div class="mood-tags">${moods.map(m=>`<span class="mood-tag">${m}</span>`).join('')}</div>
+    </div>`:''}
+    ${e.highlight?`<div class="detail-section">
+      <div class="lbl">Favorite Moment · 心动瞬间</div>
+      <div class="detail-highlight">
+        <div class="hl-kicker">摘录 · Excerpt</div>
+        <div class="hl-text"><span class="inner">${escapeHTML(e.highlight)}</span></div>
+      </div>
+    </div>`:''}
+    ${e.review?`<div class="detail-section">
+      <div class="lbl">Review · 我的简评</div>
+      <div class="detail-review"><div class="text">${e.review}</div></div>
+    </div>`:''}
+    <div class="detail-date">归档于 · ${e.date||'未注明'}</div>
+    <div class="detail-actions">
+      <button class="btn btn-primary" onclick="editEntry('${e.id}')">编辑</button>
+      <button class="btn btn-danger" onclick="deleteEntry('${e.id}')">删除</button>
+    </div>`;
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('drawer').classList.add('show');
+}
+function escapeHTML(s){
+  return String(s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+}
+function closeDetail(){
+  document.getElementById('overlay').classList.remove('show');
+  document.getElementById('drawer').classList.remove('show');
+}
+async function deleteEntry(id){
+  if(!confirm('确定要从档案中移除这一条吗？')) return;
+  state.entries = state.entries.filter(e=>e.id!==id);
+  await Store.deleteOne(id);
+  closeDetail();
+  renderCurrent();
+}
+
+/* ============================================================
+   添加 / 编辑表单
+   ============================================================ */
+function prepareForm(){
+  state.editingId = null;
+  document.getElementById('formTitle').innerHTML = '记一笔<span class="en">New entry</span>';
+  document.getElementById('submitBtn').textContent = '收入档案';
+  document.getElementById('f_title').value='';
+  document.getElementById('f_otitle').value='';
+  document.getElementById('f_creator').value='';
+  document.getElementById('f_year').value='';
+  document.getElementById('f_genre').value='';
+  document.getElementById('f_date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('f_review').value='';
+  document.getElementById('f_highlight').value='';
+  document.getElementById('f_mood').value='';
+  document.getElementById('f_status').value='done';
+  state.formType='movie'; state.formRating=4; state.formHue=358; state.formCoverImg=null;
+  state.formStatus='done'; state.formMood=''; state.formHighlight='';
+  buildTypePicker();
+  buildRatingInput();
+  buildHuePicker();
+  renderCoverPreview();
+  buildMoodSuggest();
+}
+function buildTypePicker(){
+  document.getElementById('typePicker').innerHTML = TYPES.map(t=>`
+    <div class="type-pick ${state.formType===t.key?'active':''}" onclick="pickType('${t.key}')">
+      <div class="ch">${t.ch}</div><span class="en">${t.en}</span>
+    </div>`).join('');
+}
+function pickType(k){ state.formType=k; buildTypePicker(); }
+function buildRatingInput(){
+  let html='';
+  for(let i=1;i<=5;i++){
+    const filled = state.formRating>=i;
+    const half = !filled && state.formRating>=i-0.5;
+    html += `<svg width="30" height="30" viewBox="0 0 24 24" onclick="pickRating(${i-0.5})" ondblclick="pickRating(${i})" title="单击半星，双击整星">
+      <path class="${filled||half?'star-fill':'star-empty'}" d="M12 2l2.9 6.3 6.9.7-5.1 4.7 1.4 6.8L12 17.8 5.9 20.5l1.4-6.8L2.2 9l6.9-.7z"/>
+    </svg>`;
+  }
+  html += `<span class="val">${state.formRating.toFixed(1)}</span>`;
+  document.getElementById('ratingInput').innerHTML = html;
+}
+function pickRating(v){ state.formRating=v; buildRatingInput(); }
+function buildHuePicker(){
+  document.getElementById('huePicker').innerHTML = HUES.map(h=>`
+    <div class="hue-swatch ${state.formHue===h?'active':''}" style="background:linear-gradient(150deg,hsl(${h},42%,42%),hsl(${(h+18)%360},38%,24%))" onclick="pickHue(${h})"></div>`).join('');
+}
+function pickHue(h){ state.formHue=h; buildHuePicker(); }
+
+/* 情绪标签推荐 + 解析 */
+function buildMoodSuggest(){
+  document.getElementById('moodSuggest').innerHTML = MOOD_SUGGESTIONS.map(m=>
+    `<span class="ms" onclick="addMoodTag('${m}')">${m}</span>`).join('');
+}
+function addMoodTag(tag){
+  const input = document.getElementById('f_mood');
+  const cur = parseMoodTags(input.value);
+  if(!cur.includes(tag)){
+    cur.push(tag);
+    input.value = cur.join('、');
+  }
+}
+function parseMoodTags(str){
+  if(!str) return [];
+  return str.split(/[，,、\s]+/).map(s=>s.trim()).filter(Boolean);
+}
+
+/* 封面上传 —— canvas 压缩到最大 480px 宽，jpeg 0.85 */
+function renderCoverPreview(){
+  const box = document.getElementById('coverPreview');
+  const clearBtn = document.getElementById('coverClearBtn');
+  if(state.formCoverImg){
+    box.innerHTML = `<img src="${state.formCoverImg}" style="width:100%;height:100%;object-fit:cover;display:block" alt="cover" />`;
+    clearBtn.style.display='';
+  }else{
+    box.innerHTML = `<div class="ph">尚未上传<br/>将使用色相生成</div>`;
+    clearBtn.style.display='none';
+  }
+}
+function onCoverPick(ev){
+  const file = ev.target.files && ev.target.files[0];
+  if(!file) return;
+  if(!file.type.startsWith('image/')){ alert('请选择图片文件'); return; }
+  compressCover(file).then(dataUrl=>{
+    state.formCoverImg = dataUrl;
+    renderCoverPreview();
+    ev.target.value = ''; // 允许重复选同一文件
+  }).catch(err=>{ alert('图片处理失败：'+err.message); });
+}
+function compressCover(file){
+  return new Promise((resolve,reject)=>{
+    const reader = new FileReader();
+    reader.onerror = ()=>reject(new Error('读取失败'));
+    reader.onload = ()=>{
+      const img = new Image();
+      img.onerror = ()=>reject(new Error('图片损坏'));
+      img.onload = ()=>{
+        const MAXW = 480;
+        let w = img.width, h = img.height;
+        if(w > MAXW){ h = Math.round(h * MAXW / w); w = MAXW; }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        // png 透明会变黑，故统一转 jpeg；若原图有透明需求可保留 png
+        resolve(canvas.toDataURL('image/jpeg', 0.85));
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+function clearCover(){
+  state.formCoverImg = null;
+  renderCoverPreview();
+}
+
+function editEntry(id){
+  const e = byId(id);
+  if(!e) return;
+  closeDetail();
+  go('add');
+  state.editingId = id;
+  document.getElementById('formTitle').innerHTML = '修订<span class="en">Edit entry</span>';
+  document.getElementById('submitBtn').textContent = '保存修订';
+  document.getElementById('f_title').value=e.title||'';
+  document.getElementById('f_otitle').value=e.otitle||'';
+  document.getElementById('f_creator').value=e.creator||'';
+  document.getElementById('f_year').value=e.year||'';
+  document.getElementById('f_genre').value=e.genre||'';
+  document.getElementById('f_date').value=e.date||'';
+  document.getElementById('f_review').value=e.review||'';
+  document.getElementById('f_highlight').value=e.highlight||'';
+  document.getElementById('f_mood').value=(e.moodTags||[]).join('、');
+  document.getElementById('f_status').value=e.status||'done';
+  state.formType=e.type; state.formRating=e.rating; state.formHue=e.hue||358; state.formCoverImg=e.coverImg||null;
+  state.formStatus=e.status||'done'; state.formHighlight=e.highlight||'';
+  buildTypePicker(); buildRatingInput(); buildHuePicker(); renderCoverPreview(); buildMoodSuggest();
+}
+
+async function submitEntry(ev){
+  ev.preventDefault();
+  const data = {
+    type: state.formType,
+    title: document.getElementById('f_title').value.trim(),
+    otitle: document.getElementById('f_otitle').value.trim(),
+    creator: document.getElementById('f_creator').value.trim(),
+    year: document.getElementById('f_year').value?parseInt(document.getElementById('f_year').value):null,
+    genre: document.getElementById('f_genre').value.trim(),
+    status: document.getElementById('f_status').value,
+    date: document.getElementById('f_date').value,
+    rating: state.formRating,
+    hue: state.formHue,
+    coverImg: state.formCoverImg,
+    moodTags: parseMoodTags(document.getElementById('f_mood').value),
+    highlight: document.getElementById('f_highlight').value.trim(),
+    review: document.getElementById('f_review').value.trim(),
+  };
+  if(!data.title){ return; }
+  let saved;
+  if(state.editingId){
+    const idx = state.entries.findIndex(e=>e.id===state.editingId);
+    if(idx>=0){
+      state.entries[idx] = {...state.entries[idx], ...data};
+      saved = state.entries[idx];
+    }
+  }else{
+    saved = {id:uid(), ...data};
+    state.entries.push(saved);
+  }
+  if(saved) await Store.saveOne(saved);
+  go('library');
+}
+
+/* ============================================================
+   年度志
+   ============================================================ */
+function shiftYear(d){
+  state.year += d;
+  renderYear();
+}
+function renderYear(){
+  const yr = state.year;
+  document.getElementById('yearBig').innerHTML = String(yr).slice(0,2)+'<span class="accent">'+String(yr).slice(2)+'</span>';
+  document.getElementById('yearSub').innerHTML = `${yr} 年度拾光志<span class="en"> · A year in review</span>`;
+  const yrs = state.entries.map(e=>yearOf(e.date)).filter(Boolean);
+  document.getElementById('yPrev').disabled = !yrs.some(y=>y<yr);
+  document.getElementById('yNext').disabled = !yrs.some(y=>y>yr);
+
+  const yrEntries = state.entries.filter(e=>yearOf(e.date)===yr);
+  document.getElementById('yearTotal').innerHTML = yrEntries.length+'<span class="unit">件</span>';
+
+  // category breakdown
+  const counts = {}; TYPES.forEach(t=>counts[t.key]=0);
+  yrEntries.forEach(e=>counts[e.type]++);
+  const max = Math.max(1,...Object.values(counts));
+  document.getElementById('catBreakdown').innerHTML = TYPES.map(t=>`
+    <div class="cat-bar">
+      <span class="ch">${t.ch}</span>
+      <div class="track"><div class="fill" style="width:${counts[t.key]/max*100}%"></div></div>
+      <span class="n">${counts[t.key]}</span>
+    </div>`).join('');
+
+  // monthly
+  const months = Array(12).fill(0);
+  yrEntries.forEach(e=>{ if(e.date){ const m=parseInt(e.date.slice(5,7)); if(m>=1&&m<=12) months[m-1]++; } });
+  const mmax = Math.max(1,...months);
+  document.getElementById('monthChart').innerHTML = months.map((v,i)=>`
+    <div class="month-col">
+      <div class="bar" style="height:${v/mmax*100}%" data-val="${v} 件"></div>
+      <span class="mlbl">${i+1}月</span>
+    </div>`).join('');
+
+  // top picks
+  const top = yrEntries.filter(e=>e.rating>=4.5).sort((a,b)=>b.rating-a.rating).slice(0,3);
+  const topList = document.getElementById('picksList');
+  if(!top.length){
+    topList.innerHTML = `<div class="empty" style="grid-column:1/-1"><div class="big">这一年还没有入选之作</div><div class="en">No highlights yet.</div></div>`;
+  }else{
+    topList.innerHTML = top.map((e,i)=>`
+      <div class="pick-item" onclick="openDetail('${e.id}')">
+        <div class="rank">No.${i+1}</div>
+        <div class="cover">${coverHTML(e)}</div>
+        <div class="t">${e.title}</div>
+        <div class="m">${TYPE_MAP[e.type].ch} · ${e.creator||''} · ★${e.rating.toFixed(1)}</div>
+        <div class="why">${e.review||''}</div>
+      </div>`).join('');
+  }
+
+  // 年度奖项
+  renderYearAwards(yrEntries);
+
+  // year note
+  const notes = {
+    2025:'这一年，我在光影书游里走了很远的路。有些故事让我哭，有些让我沉默，有些让我重新相信。把它们收进档案，是怕忘记自己曾被这样照亮过。',
+    2024:'这一年，开始认真记录每一部看完的作品。原来一年能装下这么多世界——别人的悲喜，也慢慢长成了自己的厚度。',
+  };
+  document.getElementById('yearNoteText').textContent = notes[yr] || `这一年，共收入 ${yrEntries.length} 件作品。每一件，都是当时的一束光。`;
+  document.getElementById('yearNoteSig').textContent = `— 拾光者 · ${yr} 冬`;
+}
+
+/* 年度奖项 —— 根据情绪标签 / 状态 / 评分自动颁出 */
+function renderYearAwards(yrEntries){
+  const awards = [
+    {key:'heartbreak', name:'年度最心碎', en:'Heartbreak of the Year', mood:'心碎',
+      empty:'这一年没有让你心碎的作品。<span class="en">May your heart stay whole.</span>'},
+    {key:'addictive',  name:'年度最上头', en:'Most Addictive of the Year', mood:'上头',
+      empty:'这一年没有让你上头的作品。<span class="en">No obsessions recorded.</span>'},
+    {key:'lifesaver',  name:'年度精神续命', en:'Lifesaver of the Year', mood:'精神续命',
+      empty:'这一年没有成为你精神续命的作品。<span class="en">You survived on your own.</span>'},
+    {key:'rewatch',    name:'年度想重温', en:'Most Re-watchable of the Year', mood:null, useStatus:'rewatch',
+      empty:'这一年没有标记为「想重温」的作品。<span class="en">Nothing begged a re-watch.</span>'},
+  ];
+  const html = awards.map(a=>{
+    let candidates;
+    if(a.useStatus){
+      candidates = yrEntries.filter(e=>e.status===a.useStatus);
+    }else{
+      candidates = yrEntries.filter(e=>(e.moodTags||[]).includes(a.mood));
+    }
+    // 评分高者优先，其次有 highlight 优先
+    candidates.sort((x,y)=>{
+      const sy = (y.rating||0) + (y.highlight?0.3:0);
+      const sx = (x.rating||0) + (x.highlight?0.3:0);
+      return sy-sx;
+    });
+    const winner = candidates[0];
+    if(!winner){
+      return `<div class="award-card empty-award">
+        <div class="award-ribbon">空缺</div>
+        <div class="award-name">${a.name}</div>
+        <span class="award-en">${a.en}</span>
+        <div class="empty-text">${a.empty}</div>
+      </div>`;
+    }
+    const t = TYPE_MAP[winner.type];
+    return `<div class="award-card" onclick="openDetail('${winner.id}')">
+      <div class="award-ribbon">得主</div>
+      <div class="award-name">${a.name}</div>
+      <span class="award-en">${a.en}</span>
+      <div class="award-winner">
+        <div class="award-cover">${coverHTML(winner)}</div>
+        <div class="award-info">
+          <div class="t">${winner.title}</div>
+          <div class="m">${t.ch} · ${winner.creator||''} · ★${winner.rating.toFixed(1)}</div>
+          ${winner.highlight?`<div class="why">"${escapeHTML(winner.highlight).slice(0,46)}${winner.highlight.length>46?'…':''}"</div>`:(winner.review?`<div class="why">${escapeHTML(winner.review).slice(0,46)}${winner.review.length>46?'…':''}</div>`:'')}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('awardsGrid').innerHTML = html;
+}
+
+/* ============================================================
+   渲染当前视图
+   ============================================================ */
+function renderCurrent(){
+  if(state.view==='home') renderHome();
+  if(state.view==='library') renderLibrary();
+  if(state.view==='year') renderYear();
+}
+
+/* ============================================================
+   初始化
+   ============================================================ */
+(async function init(){
+  await load();
+  go('home');
+})();
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeDetail(); });
+
+/* Service Worker 注册（PWA 离线支持） */
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('service-worker.js')
+      .catch(()=>{ /* SW 注册失败时静默，不影响使用 */ });
+  });
+}
+</script>
+</body>
+</html>
